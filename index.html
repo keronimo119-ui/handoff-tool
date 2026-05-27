@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作業引き継ぎツール</title>
+<style>
+body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px;background:#1a1a2e;color:#eee;}
+h1{color:#e67e00;font-size:1.4em;text-align:center;}
+.card{background:#16213e;border-radius:12px;padding:20px;margin:16px 0;border:1px solid #0f3460;}
+textarea,input[type=text],input[type=password]{width:100%;box-sizing:border-box;padding:10px;border:1px solid #0f3460;border-radius:8px;font-size:14px;background:#0f3460;color:#eee;resize:vertical;}
+button{padding:12px 24px;border:none;border-radius:8px;font-size:15px;cursor:pointer;width:100%;margin:6px 0;font-weight:bold;}
+.btn-save{background:#e67e00;color:#fff;}
+.btn-load{background:#2e7d32;color:#fff;}
+.btn-copy{background:#1565c0;color:#fff;}
+.btn-setting{background:#444;color:#fff;}
+.output{background:#0f3460;border:1px solid #1565c0;border-radius:8px;padding:12px;font-size:13px;white-space:pre-wrap;word-break:break-all;min-height:60px;margin:8px 0;}
+.label{font-weight:bold;margin-bottom:6px;color:#aaa;font-size:13px;}
+.status{color:#4caf50;font-size:13px;margin-top:6px;}
+.error{color:#f44336;font-size:13px;margin-top:6px;}
+.history-item{border-bottom:1px solid #0f3460;padding:8px 0;font-size:13px;cursor:pointer;}
+.history-item:hover{color:#e67e00;}
+details summary{cursor:pointer;color:#aaa;font-size:13px;margin-top:8px;}
+</style>
+</head>
+<body>
+<h1>🔁 作業引き継ぎツール</h1>
+
+<details>
+<summary>⚙ GitHub設定（各PCで1回だけ）</summary>
+<div class="card">
+  <div class="label">GitHub Personal Access Token</div>
+  <input type="password" id="pat" placeholder="ghp_xxxxxxxxxxxx">
+  <div class="label" style="margin-top:8px;">GitHubユーザー名</div>
+  <input type="text" id="githubUser" value="keronimo119-ui">
+  <div class="label" style="margin-top:8px;">リポジトリ名</div>
+  <input type="text" id="githubRepo" value="tene">
+  <button class="btn-setting" onclick="saveSetting()" style="margin-top:10px;">💾 設定を保存</button>
+  <div class="status" id="settingStatus"></div>
+</div>
+</details>
+
+<div class="card">
+  <div class="label">📁 プロジェクト名</div>
+  <input type="text" id="projectName" placeholder="例：手値（Tene）">
+</div>
+
+<div class="card">
+  <div class="label">📌 今回やったこと・現在の状況</div>
+  <textarea id="currentStatus" rows="4" placeholder="例：クローズドテスト審査送信完了。審査通過待ち。"></textarea>
+  <div class="label" style="margin-top:10px;">⏭ 次にやること</div>
+  <textarea id="nextAction" rows="3" placeholder="例：審査通過後、12人にオプトインリンクを送る。"></textarea>
+  <div class="label" style="margin-top:10px;">🔧 重要メモ・設定値（任意）</div>
+  <textarea id="memo" rows="3" placeholder="例：AABバージョンコードは毎回+1。署名キーはVr1フォルダ。"></textarea>
+</div>
+
+<div class="card">
+  <button class="btn-save" onclick="saveHandoff()">💾 作業終了・GitHubに保存</button>
+  <div class="status" id="saveStatus"></div>
+</div>
+
+<div class="card">
+  <button class="btn-load" onclick="loadHandoff()">▶ 作業再開・GitHubから読み込み</button>
+  <div class="label" style="margin-top:12px;">AIに貼り付けるテキスト：</div>
+  <div class="output" id="aiPrompt">「作業再開」ボタンを押すと命令文が生成されます。</div>
+  <button class="btn-copy" onclick="copyPrompt()">📋 コピーして新しいセッションに貼る</button>
+  <div class="status" id="copyStatus"></div>
+</div>
+
+<div class="card">
+  <div class="label">📚 過去のセッション履歴</div>
+  <button class="btn-setting" onclick="loadHistory()">🔄 履歴を読み込む</button>
+  <div id="historyList" style="margin-top:10px;"></div>
+</div>
+
+<script>
+const FILE_PATH = 'docs/handoff-data.json';
+
+function saveSetting(){
+  localStorage.setItem('gh_pat', document.getElementById('pat').value);
+  localStorage.setItem('gh_user', document.getElementById('githubUser').value);
+  localStorage.setItem('gh_repo', document.getElementById('githubRepo').value);
+  document.getElementById('settingStatus').textContent = '✅ 設定を保存しました';
+}
+
+function loadSetting(){
+  const pat = localStorage.getItem('gh_pat');
+  const user = localStorage.getItem('gh_user');
+  const repo = localStorage.getItem('gh_repo');
+  if(pat) document.getElementById('pat').value = pat;
+  if(user) document.getElementById('githubUser').value = user;
+  if(repo) document.getElementById('githubRepo').value = repo;
+}
+
+async function getFileInfo(){
+  const user = localStorage.getItem('gh_user') || document.getElementById('githubUser').value;
+  const repo = localStorage.getItem('gh_repo') || document.getElementById('githubRepo').value;
+  const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
+  const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${FILE_PATH}`,{
+    headers:{'Authorization':'token '+pat,'Accept':'application/vnd.github.v3+json'}
+  });
+  if(res.ok) return await res.json();
+  return null;
+}
+
+async function saveHandoff(){
+  const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
+  const user = localStorage.getItem('gh_user') || document.getElementById('githubUser').value;
+  const repo = localStorage.getItem('gh_repo') || document.getElementById('githubRepo').value;
+  if(!pat){document.getElementById('saveStatus').className='error';document.getElementById('saveStatus').textContent='❌ GitHub設定を先に保存してください';return;}
+
+  document.getElementById('saveStatus').textContent = '保存中...';
+
+  const newEntry = {
+    project: document.getElementById('projectName').value,
+    status: document.getElementById('currentStatus').value,
+    next: document.getElementById('nextAction').value,
+    memo: document.getElementById('memo').value,
+    savedAt: new Date().toLocaleString('ja-JP')
+  };
+
+  let history = [];
+  let sha = null;
+  const fileInfo = await getFileInfo();
+  if(fileInfo){
+    sha = fileInfo.sha;
+    history = JSON.parse(atob(fileInfo.content.replace(/\n/g,'')));
+  }
+  history.unshift(newEntry);
+  if(history.length > 20) history = history.slice(0,20);
+
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(history,null,2))));
+  const body = {message:`handoff: ${newEntry.project} ${newEntry.savedAt}`,content};
+  if(sha) body.sha = sha;
+
+  const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${FILE_PATH}`,{
+    method:'PUT',
+    headers:{'Authorization':'token '+pat,'Content-Type':'application/json'},
+    body: JSON.stringify(body)
+  });
+
+  if(res.ok){
+    document.getElementById('saveStatus').className='status';
+    document.getElementById('saveStatus').textContent='✅ GitHubに保存しました：'+newEntry.savedAt;
+  } else {
+    document.getElementById('saveStatus').className='error';
+    document.getElementById('saveStatus').textContent='❌ 保存失敗。Token・設定を確認してください';
+  }
+}
+
+async function loadHandoff(){
+  const fileInfo = await getFileInfo();
+  if(!fileInfo){document.getElementById('aiPrompt').textContent='データが見つかりません。先に保存してください。';return;}
+  const history = JSON.parse(atob(fileInfo.content.replace(/\n/g,'')));
+  const data = history[0];
+  const user = localStorage.getItem('gh_user') || 'keronimo119-ui';
+  const repo = localStorage.getItem('gh_repo') || 'tene';
+
+  const prompt = `以下の引き継ぎデータを読み込んで、続きから作業を進めてください。
+
+【プロジェクト】${data.project}
+【前回保存日時】${data.savedAt}
+【現在の状況・前回やったこと】
+${data.status}
+【次にやること】
+${data.next}
+【重要な設定・メモ】
+${data.memo}
+
+詳細な手順は https://github.com/${user}/${repo}/tree/main/docs を参照してください。
+上記を把握した上で「続きから作業を開始します」と言って、次のアクションを提案してください。`;
+
+  document.getElementById('aiPrompt').textContent = prompt;
+  document.getElementById('projectName').value = data.project || '';
+  document.getElementById('currentStatus').value = data.status || '';
+  document.getElementById('nextAction').value = data.next || '';
+  document.getElementById('memo').value = data.memo || '';
+}
+
+async function loadHistory(){
+  const fileInfo = await getFileInfo();
+  if(!fileInfo){document.getElementById('historyList').textContent='履歴なし';return;}
+  const history = JSON.parse(atob(fileInfo.content.replace(/\n/g,'')));
+  const list = document.getElementById('historyList');
+  list.innerHTML = '';
+  history.forEach((h,i)=>{
+    const div = document.createElement('div');
+    div.className = 'history-item';
+    div.textContent = `${h.savedAt}　${h.project}　→ ${h.next?.substring(0,30)}...`;
+    div.onclick = ()=>{
+      document.getElementById('projectName').value = h.project||'';
+      document.getElementById('currentStatus').value = h.status||'';
+      document.getElementById('nextAction').value = h.next||'';
+      document.getElementById('memo').value = h.memo||'';
+    };
+    list.appendChild(div);
+  });
+}
+
+function copyPrompt(){
+  const text = document.getElementById('aiPrompt').textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    document.getElementById('copyStatus').textContent='✅ コピーしました！新しいセッションに貼り付けてください。';
+  });
+}
+
+window.onload = loadSetting;
+</script>
+</body>
+</html>
