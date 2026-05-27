@@ -8,7 +8,7 @@
 body{font-family:sans-serif;max-width:800px;margin:40px auto;padding:0 20px;background:#1a1a2e;color:#eee;}
 h1{color:#e67e00;font-size:1.4em;text-align:center;}
 .card{background:#16213e;border-radius:12px;padding:20px;margin:16px 0;border:1px solid #0f3460;}
-textarea,input[type=text],input[type=password]{width:100%;box-sizing:border-box;padding:10px;border:1px solid #0f3460;border-radius:8px;font-size:14px;background:#0f3460;color:#eee;resize:vertical;}
+textarea,input[type=text],input[type=password],select{width:100%;box-sizing:border-box;padding:10px;border:1px solid #0f3460;border-radius:8px;font-size:14px;background:#0f3460;color:#eee;resize:vertical;}
 button{padding:12px 24px;border:none;border-radius:8px;font-size:15px;cursor:pointer;width:100%;margin:6px 0;font-weight:bold;}
 .btn-save{background:#e67e00;color:#fff;}
 .btn-load{background:#2e7d32;color:#fff;}
@@ -42,7 +42,11 @@ details summary{cursor:pointer;color:#aaa;font-size:13px;margin-top:8px;}
 
 <div class="card">
   <div class="label">📁 プロジェクト名</div>
-  <input type="text" id="projectName" placeholder="例：手値（Tene）">
+  <div style="display:flex;gap:8px;">
+    <input type="text" id="projectName" placeholder="例：手値（Tene）" style="flex:1;">
+    <button class="btn-setting" onclick="loadProjects()" style="width:auto;padding:10px 16px;margin:0;">📋 一覧</button>
+  </div>
+  <div id="projectList" style="margin-top:8px;"></div>
 </div>
 
 <div class="card">
@@ -62,7 +66,7 @@ details summary{cursor:pointer;color:#aaa;font-size:13px;margin-top:8px;}
 <div class="card">
   <button class="btn-load" onclick="loadHandoff()">▶ 作業再開・GitHubから読み込み</button>
   <div class="label" style="margin-top:12px;">AIに貼り付けるテキスト：</div>
-  <div class="output" id="aiPrompt">「作業再開」ボタンを押すと命令文が生成されます。</div>
+  <div class="output" id="aiPrompt">プロジェクト名を入力して「作業再開」ボタンを押すと命令文が生成されます。</div>
   <button class="btn-copy" onclick="copyPrompt()">📋 コピーして新しいセッションに貼る</button>
   <div id="copyStatus"></div>
 </div>
@@ -111,6 +115,31 @@ async function getFileInfo(){
   return null;
 }
 
+async function getAllHistory(){
+  const fileInfo = await getFileInfo();
+  if(!fileInfo) return [];
+  return JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
+}
+
+async function loadProjects(){
+  const history = await getAllHistory();
+  const projects = [...new Set(history.map(h => h.project).filter(p => p))];
+  const list = document.getElementById('projectList');
+  if(projects.length === 0){list.textContent='保存済みプロジェクトなし';return;}
+  list.innerHTML = '';
+  projects.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-setting';
+    btn.style = 'margin:3px 0;padding:8px;font-size:13px;';
+    btn.textContent = '📁 ' + p;
+    btn.onclick = () => {
+      document.getElementById('projectName').value = p;
+      list.innerHTML = '';
+    };
+    list.appendChild(btn);
+  });
+}
+
 async function saveHandoff(){
   const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
   const user = localStorage.getItem('gh_user') || document.getElementById('githubUser').value;
@@ -129,15 +158,13 @@ async function saveHandoff(){
     savedAt: new Date().toLocaleString('ja-JP')
   };
 
-  let history = [];
+  let history = await getAllHistory();
   let sha = null;
   const fileInfo = await getFileInfo();
-  if(fileInfo){
-    sha = fileInfo.sha;
-    history = JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
-  }
+  if(fileInfo) sha = fileInfo.sha;
+
   history.unshift(newEntry);
-  if(history.length > 20) history = history.slice(0,20);
+  if(history.length > 50) history = history.slice(0,50);
 
   const content = utf8ToBase64(JSON.stringify(history, null, 2));
   const body = {message:`handoff: ${newEntry.project} ${newEntry.savedAt}`, content};
@@ -159,10 +186,21 @@ async function saveHandoff(){
 }
 
 async function loadHandoff(){
-  const fileInfo = await getFileInfo();
-  if(!fileInfo){document.getElementById('aiPrompt').textContent='データが見つかりません。先に保存してください。';return;}
-  const history = JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
-  const data = history[0];
+  const projectName = document.getElementById('projectName').value.trim();
+  const history = await getAllHistory();
+
+  let data;
+  if(projectName){
+    data = history.find(h => h.project === projectName);
+    if(!data){
+      document.getElementById('aiPrompt').textContent = `「${projectName}」のデータが見つかりません。`;
+      return;
+    }
+  } else {
+    data = history[0];
+    if(!data){document.getElementById('aiPrompt').textContent='データが見つかりません。先に保存してください。';return;}
+  }
+
   const user = localStorage.getItem('gh_user') || 'keronimo119-ui';
   const repo = localStorage.getItem('gh_repo') || 'handoff-tool';
 
@@ -188,12 +226,13 @@ ${data.memo}
 }
 
 async function loadHistory(){
-  const fileInfo = await getFileInfo();
-  if(!fileInfo){document.getElementById('historyList').textContent='履歴なし';return;}
-  const history = JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
+  const projectName = document.getElementById('projectName').value.trim();
+  const history = await getAllHistory();
+  const filtered = projectName ? history.filter(h => h.project === projectName) : history;
   const list = document.getElementById('historyList');
   list.innerHTML = '';
-  history.forEach((h)=>{
+  if(filtered.length === 0){list.textContent='履歴なし';return;}
+  filtered.forEach((h)=>{
     const div = document.createElement('div');
     div.className = 'history-item';
     div.textContent = `${h.savedAt}　${h.project}　→ ${(h.next||'').substring(0,30)}...`;
