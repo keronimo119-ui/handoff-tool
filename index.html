@@ -34,7 +34,7 @@ details summary{cursor:pointer;color:#aaa;font-size:13px;margin-top:8px;}
   <div class="label" style="margin-top:8px;">GitHubユーザー名</div>
   <input type="text" id="githubUser" value="keronimo119-ui">
   <div class="label" style="margin-top:8px;">リポジトリ名</div>
-  <input type="text" id="githubRepo" value="tene">
+  <input type="text" id="githubRepo" value="handoff-tool">
   <button class="btn-setting" onclick="saveSetting()" style="margin-top:10px;">💾 設定を保存</button>
   <div class="status" id="settingStatus"></div>
 </div>
@@ -56,7 +56,7 @@ details summary{cursor:pointer;color:#aaa;font-size:13px;margin-top:8px;}
 
 <div class="card">
   <button class="btn-save" onclick="saveHandoff()">💾 作業終了・GitHubに保存</button>
-  <div class="status" id="saveStatus"></div>
+  <div id="saveStatus"></div>
 </div>
 
 <div class="card">
@@ -64,7 +64,7 @@ details summary{cursor:pointer;color:#aaa;font-size:13px;margin-top:8px;}
   <div class="label" style="margin-top:12px;">AIに貼り付けるテキスト：</div>
   <div class="output" id="aiPrompt">「作業再開」ボタンを押すと命令文が生成されます。</div>
   <button class="btn-copy" onclick="copyPrompt()">📋 コピーして新しいセッションに貼る</button>
-  <div class="status" id="copyStatus"></div>
+  <div id="copyStatus"></div>
 </div>
 
 <div class="card">
@@ -74,7 +74,15 @@ details summary{cursor:pointer;color:#aaa;font-size:13px;margin-top:8px;}
 </div>
 
 <script>
-const FILE_PATH = 'docs/handoff-data.json';
+const FILE_PATH = 'handoff-data.json';
+
+function utf8ToBase64(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (match, p1) => String.fromCharCode('0x' + p1)));
+}
+
+function base64ToUtf8(str) {
+  return decodeURIComponent(atob(str).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+}
 
 function saveSetting(){
   localStorage.setItem('gh_pat', document.getElementById('pat').value);
@@ -107,9 +115,11 @@ async function saveHandoff(){
   const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
   const user = localStorage.getItem('gh_user') || document.getElementById('githubUser').value;
   const repo = localStorage.getItem('gh_repo') || document.getElementById('githubRepo').value;
-  if(!pat){document.getElementById('saveStatus').className='error';document.getElementById('saveStatus').textContent='❌ GitHub設定を先に保存してください';return;}
+  const statusEl = document.getElementById('saveStatus');
+  if(!pat){statusEl.className='error';statusEl.textContent='❌ GitHub設定を先に保存してください';return;}
 
-  document.getElementById('saveStatus').textContent = '保存中...';
+  statusEl.className='status';
+  statusEl.textContent = '保存中...';
 
   const newEntry = {
     project: document.getElementById('projectName').value,
@@ -124,13 +134,13 @@ async function saveHandoff(){
   const fileInfo = await getFileInfo();
   if(fileInfo){
     sha = fileInfo.sha;
-    history = JSON.parse(atob(fileInfo.content.replace(/\n/g,'')));
+    history = JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
   }
   history.unshift(newEntry);
   if(history.length > 20) history = history.slice(0,20);
 
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(history,null,2))));
-  const body = {message:`handoff: ${newEntry.project} ${newEntry.savedAt}`,content};
+  const content = utf8ToBase64(JSON.stringify(history, null, 2));
+  const body = {message:`handoff: ${newEntry.project} ${newEntry.savedAt}`, content};
   if(sha) body.sha = sha;
 
   const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${FILE_PATH}`,{
@@ -140,21 +150,21 @@ async function saveHandoff(){
   });
 
   if(res.ok){
-    document.getElementById('saveStatus').className='status';
-    document.getElementById('saveStatus').textContent='✅ GitHubに保存しました：'+newEntry.savedAt;
+    statusEl.className='status';
+    statusEl.textContent='✅ GitHubに保存しました：'+newEntry.savedAt;
   } else {
-    document.getElementById('saveStatus').className='error';
-    document.getElementById('saveStatus').textContent='❌ 保存失敗。Token・設定を確認してください';
+    statusEl.className='error';
+    statusEl.textContent='❌ 保存失敗。Token・設定を確認してください';
   }
 }
 
 async function loadHandoff(){
   const fileInfo = await getFileInfo();
   if(!fileInfo){document.getElementById('aiPrompt').textContent='データが見つかりません。先に保存してください。';return;}
-  const history = JSON.parse(atob(fileInfo.content.replace(/\n/g,'')));
+  const history = JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
   const data = history[0];
   const user = localStorage.getItem('gh_user') || 'keronimo119-ui';
-  const repo = localStorage.getItem('gh_repo') || 'tene';
+  const repo = localStorage.getItem('gh_repo') || 'handoff-tool';
 
   const prompt = `以下の引き継ぎデータを読み込んで、続きから作業を進めてください。
 
@@ -167,7 +177,7 @@ ${data.next}
 【重要な設定・メモ】
 ${data.memo}
 
-詳細な手順は https://github.com/${user}/${repo}/tree/main/docs を参照してください。
+詳細な手順は https://github.com/keronimo119-ui/tene/tree/main/docs を参照してください。
 上記を把握した上で「続きから作業を開始します」と言って、次のアクションを提案してください。`;
 
   document.getElementById('aiPrompt').textContent = prompt;
@@ -180,13 +190,13 @@ ${data.memo}
 async function loadHistory(){
   const fileInfo = await getFileInfo();
   if(!fileInfo){document.getElementById('historyList').textContent='履歴なし';return;}
-  const history = JSON.parse(atob(fileInfo.content.replace(/\n/g,'')));
+  const history = JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
   const list = document.getElementById('historyList');
   list.innerHTML = '';
-  history.forEach((h,i)=>{
+  history.forEach((h)=>{
     const div = document.createElement('div');
     div.className = 'history-item';
-    div.textContent = `${h.savedAt}　${h.project}　→ ${h.next?.substring(0,30)}...`;
+    div.textContent = `${h.savedAt}　${h.project}　→ ${(h.next||'').substring(0,30)}...`;
     div.onclick = ()=>{
       document.getElementById('projectName').value = h.project||'';
       document.getElementById('currentStatus').value = h.status||'';
@@ -200,6 +210,7 @@ async function loadHistory(){
 function copyPrompt(){
   const text = document.getElementById('aiPrompt').textContent;
   navigator.clipboard.writeText(text).then(()=>{
+    document.getElementById('copyStatus').className='status';
     document.getElementById('copyStatus').textContent='✅ コピーしました！新しいセッションに貼り付けてください。';
   });
 }
