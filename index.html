@@ -129,27 +129,33 @@ function cancelEdit(){
   document.getElementById('memo').value = '';
 }
 
-async function getFileInfo(){
-  const user = localStorage.getItem('gh_user') || document.getElementById('githubUser').value;
-  const repo = localStorage.getItem('gh_repo') || document.getElementById('githubRepo').value;
-  const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
-  const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${FILE_PATH}`,{
-    headers:{'Authorization':'token '+pat,'Accept':'application/vnd.github.v3+json'}
-  });
-  if(res.ok) return await res.json();
-  return null;
-}
-async function getAllHistory(){
-  const fileInfo = await getFileInfo();
-  if(!fileInfo) return [];
-  return JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
-}
-async function writeHistory(history, message){
+// ★ 安全な既存データ取得（エラー種別を返す）
+async function fetchCurrentData(){
   const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
   const user = localStorage.getItem('gh_user') || document.getElementById('githubUser').value;
   const repo = localStorage.getItem('gh_repo') || document.getElementById('githubRepo').value;
-  const fileInfo = await getFileInfo();
-  const sha = fileInfo ? fileInfo.sha : null;
+  try {
+    const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/${FILE_PATH}`,{
+      headers:{'Authorization':'token '+pat,'Accept':'application/vnd.github.v3+json'}
+    });
+    if(res.ok){
+      const fileInfo = await res.json();
+      const history = JSON.parse(base64ToUtf8(fileInfo.content.replace(/\n/g,'')));
+      return {ok:true, history, sha:fileInfo.sha};
+    } else if(res.status === 404){
+      return {ok:true, history:[], sha:null, newFile:true}; // 新規ファイル
+    } else {
+      return {ok:false, status:res.status, history:[], sha:null}; // 認証エラー等
+    }
+  } catch(e) {
+    return {ok:false, status:'network', history:[], sha:null}; // 通信エラー
+  }
+}
+
+async function writeHistory(history, sha, message){
+  const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
+  const user = localStorage.getItem('gh_user') || document.getElementById('githubUser').value;
+  const repo = localStorage.getItem('gh_repo') || document.getElementById('githubRepo').value;
   const content = utf8ToBase64(JSON.stringify(history, null, 2));
   const body = {message, content};
   if(sha) body.sha = sha;
@@ -159,6 +165,17 @@ async function writeHistory(history, message){
     body: JSON.stringify(body)
   });
   return res.ok;
+}
+
+async function getFileInfoLegacy(){
+  const result = await fetchCurrentData();
+  if(result.ok) return {content: utf8ToBase64(JSON.stringify(result.history, null, 2)), sha: result.sha};
+  return null;
+}
+
+async function getAllHistory(){
+  const result = await fetchCurrentData();
+  return result.history;
 }
 
 async function loadProjects(){
@@ -181,7 +198,27 @@ async function saveHandoff(){
   const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
   const statusEl = document.getElementById('saveStatus');
   if(!pat){statusEl.className='error';statusEl.textContent='❌ GitHub設定を先に保存してください';return;}
-  statusEl.className='status'; statusEl.textContent='保存中...';
+
+  statusEl.className='status'; statusEl.textContent='⏳ 既存データ確認中...';
+
+  // ★ 安全チェック：既存データが読めるか確認
+  const current = await fetchCurrentData();
+  if(!current.ok){
+    const errMsg = current.status === 401 ? '認証エラー（PATが無効）' :
+                   current.status === 403 ? '権限エラー' :
+                   current.status === 'network' ? '通信エラー' : `エラー(${current.status})`;
+    statusEl.textContent = '';
+    const proceed = confirm(
+      `⚠️ 警告：既存データの読み込みに失敗しました\n` +
+      `原因：${errMsg}\n\n` +
+      `このまま保存すると過去の履歴が全て消える可能性があります。\n\n` +
+      `【推奨】キャンセルしてGitHub設定のPATを確認してください。\n\n` +
+      `本当に続けますか？`
+    );
+    if(!proceed){ statusEl.className='error'; statusEl.textContent='❌ 保存を中止しました。PAT設定を確認してください。'; return; }
+  }
+
+  statusEl.textContent='保存中...';
   const newEntry = {
     project: document.getElementById('projectName').value,
     status: document.getElementById('currentStatus').value,
@@ -189,12 +226,14 @@ async function saveHandoff(){
     memo: document.getElementById('memo').value,
     savedAt: new Date().toLocaleString('ja-JP')
   };
-  let history = await getAllHistory();
+
+  let history = current.history;
   history.unshift(newEntry);
   if(history.length > 50) history = history.slice(0,50);
-  const ok = await writeHistory(history, `handoff: ${newEntry.project} ${newEntry.savedAt}`);
+
+  const ok = await writeHistory(history, current.sha, `handoff: ${newEntry.project} ${newEntry.savedAt}`);
   if(ok){
-    statusEl.className='status'; statusEl.textContent='✅ 新規追加で保存しました：'+newEntry.savedAt;
+    statusEl.className='status'; statusEl.textContent='✅ 保存しました（履歴'+ history.length +'件）：'+newEntry.savedAt;
     cancelEdit(); await loadHistory();
   } else {
     statusEl.className='error'; statusEl.textContent='❌ 保存失敗。Token・設定を確認してください';
@@ -206,18 +245,33 @@ async function updateHandoff(){
   const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
   const statusEl = document.getElementById('saveStatus');
   if(!pat){statusEl.className='error';statusEl.textContent='❌ GitHub設定を先に保存してください';return;}
-  statusEl.className='status'; statusEl.textContent='上書き保存中...';
-  let history = await getAllHistory();
-  if(editingIndex >= history.length){statusEl.className='error';statusEl.textContent='❌ エントリが見つかりません';return;}
+
+  statusEl.className='status'; statusEl.textContent='⏳ 既存データ確認中...';
+
+  // ★ 安全チェック
+  const current = await fetchCurrentData();
+  if(!current.ok){
+    statusEl.textContent = '';
+    const errMsg = current.status === 401 ? '認証エラー（PATが無効）' : `エラー(${current.status})`;
+    const proceed = confirm(`⚠️ 警告：既存データ読み込み失敗（${errMsg}）\n上書きすると履歴が消える可能性があります。続けますか？`);
+    if(!proceed){ statusEl.className='error'; statusEl.textContent='❌ 上書きを中止しました。'; return; }
+  }
+
+  if(editingIndex >= current.history.length){
+    statusEl.className='error'; statusEl.textContent='❌ エントリが見つかりません';return;
+  }
+
+  statusEl.textContent='上書き保存中...';
   const updated = {
     project: document.getElementById('projectName').value,
     status: document.getElementById('currentStatus').value,
     next: document.getElementById('nextAction').value,
     memo: document.getElementById('memo').value,
-    savedAt: history[editingIndex].savedAt + '（更新：' + new Date().toLocaleString('ja-JP') + '）'
+    savedAt: current.history[editingIndex].savedAt + '（更新：' + new Date().toLocaleString('ja-JP') + '）'
   };
-  history[editingIndex] = updated;
-  const ok = await writeHistory(history, `update: ${updated.project} ${new Date().toLocaleString('ja-JP')}`);
+  current.history[editingIndex] = updated;
+
+  const ok = await writeHistory(current.history, current.sha, `update: ${updated.project} ${new Date().toLocaleString('ja-JP')}`);
   if(ok){
     statusEl.className='status'; statusEl.textContent='✅ 上書き保存しました';
     cancelEdit(); await loadHistory();
@@ -230,9 +284,10 @@ async function deleteEntry(index){
   if(!confirm('このエントリを削除しますか？')) return;
   const pat = localStorage.getItem('gh_pat') || document.getElementById('pat').value;
   if(!pat){alert('GitHub設定を先に保存してください');return;}
-  let history = await getAllHistory();
-  history.splice(index, 1);
-  const ok = await writeHistory(history, `delete entry ${index}`);
+  const current = await fetchCurrentData();
+  if(!current.ok){alert('データ読み込み失敗。PAT設定を確認してください。');return;}
+  current.history.splice(index, 1);
+  const ok = await writeHistory(current.history, current.sha, `delete entry ${index}`);
   if(ok){ await loadHistory(); }
   else { alert('削除に失敗しました'); }
 }
@@ -241,7 +296,10 @@ async function loadHandoff(){
   const projectName = document.getElementById('projectName').value.trim();
   const history = await getAllHistory();
   let data = projectName ? history.find(h => h.project === projectName) : history[0];
-  if(!data){document.getElementById('aiPrompt').textContent = projectName ? `「${projectName}」のデータが見つかりません。` : 'データが見つかりません。先に保存してください。';return;}
+  if(!data){
+    document.getElementById('aiPrompt').textContent = projectName ? `「${projectName}」のデータが見つかりません。` : 'データが見つかりません。先に保存してください。';
+    return;
+  }
   const prompt = `以下の引き継ぎデータを読み込んで、続きから作業を進めてください。
 
 【プロジェクト】${data.project}
