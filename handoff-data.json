@@ -1,5 +1,12 @@
 [
   {
+    "project": "手値（Tene）",
+    "status": "Google Play クローズドテスト審査に送信完了（2026/5/27）。\n審査通過メール待ち中。",
+    "next": "① 審査通過メールが届いたら、テスター12人にオプトインリンクを送る\n② 14日間のテスト期間を待つ\n③ 本番リリース（製品版）申請\n④ AdMob設定（並行して進められる）",
+    "memo": "・GitHub Pages: https://keronimo119-ui.github.io/tene/tene.html\n・リポジトリ: https://github.com/keronimo119-ui/tene\n・パッケージID: io.github.keronimo119ui.tene\n・署名キー: Vr1フォルダ/signing.keystore（Key alias: tene-key）\n・AABバージョンコードは毎回+1（現在2）\n・PWABuilder使用時は必ず「Use mine」でsigning.keystoreを指定\n・詳細: https://github.com/keronimo119-ui/tene/tree/main/docs",
+    "savedAt": "2026/6/1 10:08:07"
+  },
+  {
     "project": "付箋タスクメモ天気付き多機能計算便利手帳",
     "status": "アプリ: 付箋タスクメモ天気付き多機能計算便利手帳.html（約1.08MB, 24800行超）\n+ 宇宙生成は space.html に分離（p5.js内蔵・同フォルダ必須）\n\n完了:\n1. メモ/お気に入りのHTMLエスケープ（表示崩れ修正）\n2. jumpToCalc 二重定義の整理\n3. バックアップ/復元機能（設定画面・localStorage丸ごと書出/読込）\n4. メモ階層化（親子孫3階層, タップ開閉, 完了チェック, ↩戻す）\n5. 天気アイコン カラーSVG化（wxIcon関数, 5箇所反映）\n6. メモ子追加=↳カラー鉛筆 / 削除=赤ゴミ箱 アイコン\n7. 宇宙生成（ナビバーに🪐土星アイコン→space.htmlを全画面iframe表示）\n※全編集で作業前バックアップを都度作成済み（_BACKUP_*.html が5世代）",
     "next": "- 6,7の動作確認がまだ（ブラウザ実機で未確認）\n- ウィジェット: 現状PWAでは不可。Capacitorネイティブ化の道筋説明が次の依頼\n- 出品直結: プライバシーポリシー / AdMob統合 / アプリ化方法 が未着手\n- ルール: 見た目・機能は相談なしに変更しない。ファイル全体上書き(Write)禁止・部分Edit のみ",
