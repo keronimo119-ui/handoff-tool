@@ -1,5 +1,12 @@
 [
   {
+    "project": "付箋メモ BISUKE（付箋タスクメモ天気付き多機能計算便利手帳・第2弾アプリ）",
+    "status": "Capacitor導入が完了し、www構成へ整理＋Android platform追加まで終了（最新コミット1404b8f、push済み・gitクリーン）。appId=io.github.keronimo119ui.bisuke / appName=付箋メモ BISUKE / webDir=www。本体HTMLには「付箋ウィジェット用データ書き出し」を実装済み（cd5e91a）。ウィジェットの見た目モック(_widget_mock.html)と仕様も確定済み。Androidはまだ素のCapacitor scaffoldで、ネイティブのウィジェット実装はゼロ＝本命の実装直前で停止。",
+    "next": "Androidホーム画面ウィジェットのネイティブ実装に着手。①AppWidgetProvider＋ウィジェット設定画面（色/透明度/文字サイズ/行間/罫線=モックの調整項目）②本体が書き出した共有データ(SharedPreferences/Capacitor Preferences)を読む配線 ③モック仕様どおりCanvasでビットマップ画像描画（フォント同梱・透明度は背景のみ・文字は常に不透明）④タップで本体アプリ起動（=広告露出が戦略の核）。実装前にまず計画を提示し合意を取ること。",
+    "memo": "【重要】このアプリのリポジトリは github.com/keronimo119-ui/bisuke 。ツールが自動付与するtene/docsリンクはTene(第1弾)用なので無視すること。別PCでの再開: git clone後にnpm install（node_modules未追跡）。作業フォルダ: Desktop\\AI\\Claude file\\付箋タスクメモ天気付き多機能計算便利手帳\\。作業ルール: 見た目・機能は相談なしに変更しない/全体上書き(Write)禁止・部分Editのみ/編集前に都度バックアップ。space.htmlはユーザー正規Drive版BH(p5内蔵)。",
+    "savedAt": "2026/6/2 16:08:33"
+  },
+  {
     "project": "",
     "status": "",
     "next": "",
