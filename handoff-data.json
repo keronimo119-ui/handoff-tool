@@ -56,13 +56,6 @@
     "savedAt": "2026/6/1 21:16:58"
   },
   {
-    "project": "付箋タスクメモ天気付き多機能計算便利手帳",
-    "status": "作業ファイル: C:\\Users\\s-mini2\\Desktop\\AI\\Claude file\\付箋タスクメモ天気付き多機能計算便利手帳\\ (このフォルダで作業)\n本体: 付箋タスクメモ天気付き多機能計算便利手帳.html (約1.08MB/24921行) + space.html (宇宙生成・同フォルダ必須)\n\n完了:\n1. 行方不明だった本体をOneNote Tempから救出→正規フォルダに集約\n2. 宇宙のブラックホール復活: ユーザーのGoogle Drive版「宇宙.html」(BlackHole版)を取得し、p5.jsを内蔵化してspace.htmlに反映(オフライン可)。元の宇宙.htmlも同フォルダに残置\n3. 土星アイコン(🪐ナビボタン)を作り直し: 20→40px、青灰+黄ストライプ惑星+1枚塗りフラットリング、リング位置はy14(惑星中心の赤道)で確定\n4. 本体メモ機能の小改良: 「▼」→「詳細メモ▼」に変更 / トップのメモ一覧で選択行を背景ハイライト(.memo-item.selected に background:var(--surface2))\n5. 付箋ウィジェットの見た目仕様を確定し、操作可能モック _widget_mock.html を作成(同フォルダ)\n\nルール: 見た目・機能は相談なしに変更しない。ファイル全体上書き(Write)禁止・部分Editのみ。編集前に必ずバックアップ。ファイルにReadOnly属性が付くこと有り(OneNote由来)→Set-ItemProperty -Name IsReadOnly -Value $false で解除。\n6. GitHub作業環境を構築: 専用リポジトリ keronimo119-ui/bisuke (Private) を作成し本体一式をpush済み。別PCはcloneで再開可能。",
-    "next": "- 別PCでは最初に: git clone https://github.com/keronimo119-ui/bisuke.git （GitHub Desktopなら Clone repository→bisuke）。本体・space.html・宇宙.html・_widget_mock.html が揃う\n- 続き作業の候補: ①付箋ウィジェットの中身詰め(一覧モード最大行数/件数バッジ/複数ウィジェット挙動) ②Capacitorネイティブ化の実装着手\n- 出品手続き(プライバシーポリシー/AdMob/Play申請)はウィジェット実装後でOK\n- 運用ルール: 作業前に git pull / 作業後に git add -A && git commit -m \"内容\" && git push。片方のPCで作業→push、もう片方でpullの順を守る(同時編集しない)",
-    "memo": "■ 付箋ウィジェット確定仕様(次の実装対象):\n- 本体アプリの既存「メモ機能」をホームに表示するだけ。編集不可、タップで本体起動(=広告露出が目的)\n- 表示: 基本4行+「▼他〇件」/ もっと行数見える一覧モードも\n- サイズ: シームレス可変(実機はホーム長押し→端ドラッグ。iOSは小中大選択)。高さに応じ行数自動増減\n- デザイン: 角丸カードベース(テープ/ピン/追加罫線は却下)。「メモ」見出し・「タップで編集」表記は出さない\n- カラー: 黄/ピンク/青/緑/紫/白/ダーク(ダーク時は文字自動で白)\n- 透明度は背景だけに効かせ文字は常に不透明(::before opacity方式)。すりガラスも可\n- 文字サイズ11-22px ▲▼ / 行間3段 / 文字色6色 / フォントはアプリ同梱で画像描画\n- 実装前提: PWA→Capacitorネイティブ化が必要(ホームウィジェットはHTML不可)。データ同期はCapacitor Preferences等で共有ストレージにJSON書込→ウィジェットが読む\n\n■ 次にやること:\n- ウィジェットの中身詰め(一覧モード最大行数/件数バッジ/複数ウィジェット挙動) または Capacitorネイティブ化の実装着手\n- 出品手続き(プライバシーポリシー/AdMob/Play申請)はウィジェット実装後でOK(ユーザー方針)\n\n■ 環境メモ:\n- GitHub: 第2弾は keronimo119-ui/bisuke (Private) ※今日構築。作業フォルダはこのリポジトリのclone先。第1弾は keronimo119-ui/tene、出品一式はTene出品用フォルダ\n- python 3.10.6あり/node無し。動作確認は .claude\\launch.json の python http.server(name=fusen-app)→localhost:8765、Claude Previewで\n- 第2弾アプリ。目的は広告バナー収入=毎日開かせること",
-    "savedAt": "2026/6/1 16:47:14"
-  },
-  {
     "project": "手値（Tene）",
     "status": "Google Play クローズドテスト審査に送信完了（2026/5/27）。\n審査通過メール待ち中。",
     "next": "① 審査通過メールが届いたら、テスター12人にオプトインリンクを送る\n② 14日間のテスト期間を待つ\n③ 本番リリース（製品版）申請\n④ AdMob設定（並行して進められる）",
