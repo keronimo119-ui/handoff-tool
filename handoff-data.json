@@ -49,13 +49,6 @@
     "savedAt": "2026/6/1 21:19:53"
   },
   {
-    "project": "付箋タスクメモ天気付き多機能計算便利手帳（BISUKE・第2弾）",
-    "status": "新PC(s-sigpc)に bisuke リポジトリをcloneし作業フォルダ確定（C:\\Users\\s-sigpc\\Desktop\\AI\\bisuke）。付箋ウィジェットの「中身詰め」を完了し _widget_mock.html に反映＆push済み（最新コミット 054eead）。\n\n確定したウィジェット仕様：\n・本体メモ(text/done/children)を読むだけ・編集不可、タップで本体起動\n・完了メモ(done)は非表示／トップ階層のみ＋子件数(〇)バッジ\n・高さに応じ行数自動増減、超過は「▼他〇件」、最大20行で打ち止め\n・未完0件のときは何も出さない（空カード）\n・複数配置は全部同じ一覧（個別設定なし）\n・色7種(黄ピンク青緑紫白ダーク)、ダークは文字自動白、透明度は背景のみ＋すりガラス可\n・文字11-22px▲▼/行間3段/文字色6色/フォント4種/罫線あり・なし\n全項目モックで動作確認済み。\n\n環境整備：このPCは実python/node無し→プレビューは PowerShell製サーバ .claude\\serve.ps1（port8765, name=fusen-app）を新設。git識別情報をこのリポジトリにローカル設定済み(keronimo119-ui)。",
-    "next": "実装フェーズへ。ウィジェット設計は確定済み。\n① 本体アプリ側の準備（Node不要・先に着手推奨）：ウィジェットが読む共有ストレージへ本体がメモJSONを書き出す処理を設計\n② Capacitorネイティブ化に着手：※作業PCに Node.js のインストールが前提（未インストールなら最初にセットアップ）\n出品手続き(プライバシーポリシー/AdMob/Play申請)はウィジェット実装後でOK。",
-    "memo": "・作業フォルダ＝clone先 C:\\Users\\<ユーザー>\\Desktop\\AI\\bisuke（GitHub: keronimo119-ui/bisuke, Private）\n・本体: 付箋タスクメモ天気付き多機能計算便利手帳.html(約1.08MB) + space.html(宇宙・同フォルダ必須) + _widget_mock.html\n・メモのデータ構造: {text, done, children[]}（ツリー）。バッジ件数 = children.length\n・編集ルール: 全体上書き禁止・部分Editのみ／編集前に必ず.bakバックアップ／OneNote由来ReadOnlyは Set-ItemProperty -Name IsReadOnly -Value $false で解除\n・運用: 作業前 git pull、作業後 git add -A && commit && push。2台同時編集しない\n・プレビュー: node/python無しPCは .claude\\serve.ps1（PowerShell製http鯖, port8765）。.bak は .gitignore 済み",
-    "savedAt": "2026/6/1 21:16:58"
-  },
-  {
     "project": "手値（Tene）",
     "status": "Google Play クローズドテスト審査に送信完了（2026/5/27）。\n審査通過メール待ち中。",
     "next": "① 審査通過メールが届いたら、テスター12人にオプトインリンクを送る\n② 14日間のテスト期間を待つ\n③ 本番リリース（製品版）申請\n④ AdMob設定（並行して進められる）",
