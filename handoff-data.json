@@ -1,13 +1,5 @@
 [
   {
-    "project": "",
-    "status": "",
-    "next": "",
-    "memo": "",
-    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/tene/main/docs/summary.md",
-    "savedAt": "2026/6/5 12:34:59"
-  },
-  {
     "project": "手値（Tene）",
     "status": "・テスター10人オプトイン済み（残り2人）\n・AdSenseアカウント作成・審査リクエスト送信済み\n・keronimo119-ui.github.io トップページ作成\n・AdSenseコードをindex.html・tene.htmlに追加\n・ads.txt追加",
     "next": "① テスター残り2人オプトイン → 12人達成で14日カウント開始\n② AdSense審査通過メール待ち → 広告ユニット作成 → #ad-bannerにコード追加\n③ 14日後 → 本番リリース申請（広告宣言を「あり」に変更）",
