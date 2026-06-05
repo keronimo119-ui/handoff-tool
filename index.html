@@ -274,7 +274,10 @@ async function updateHandoff(){
     docsUrl:document.getElementById('docsUrl').value,
     savedAt:current.history[editingIndex].savedAt+'（更新：'+new Date().toLocaleString('ja-JP')+'）'
   };
-  current.history[editingIndex]=updated;
+  // 上書き保存したエントリは履歴の先頭へ移動（最新更新が一番上に来るように）。
+  // splice で一旦抜いて unshift で先頭に入れ直すだけなので、データは updated に保持され消えない。
+  current.history.splice(editingIndex,1);
+  current.history.unshift(updated);
   const ok=await writeHistory(current.history,current.sha,`update: ${updated.project} ${new Date().toLocaleString('ja-JP')}`);
   if(ok){statusEl.className='status';statusEl.textContent='✅ 上書き保存しました';cancelEdit();await loadHistory();}
   else{statusEl.className='error';statusEl.textContent='❌ 保存失敗。Token・設定を確認してください';}
