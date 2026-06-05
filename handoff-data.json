@@ -1,5 +1,12 @@
 [
   {
+    "project": "手値（Tene）",
+    "status": "・テスター10人オプトイン済み（残り2人）\n・AdSenseアカウント作成・審査リクエスト送信済み\n・keronimo119-ui.github.io トップページ作成\n・AdSenseコードをindex.html・tene.htmlに追加\n・ads.txt追加",
+    "next": "① テスター残り2人オプトイン → 12人達成で14日カウント開始\n② AdSense審査通過メール待ち → 広告ユニット作成 → #ad-bannerにコード追加\n③ 14日後 → 本番リリース申請（広告宣言を「あり」に変更）",
+    "memo": "・AdSense パブリッシャーID: ca-pub-5082973443766226\n・AABバージョンコードは毎回+1（現在2）\n・署名キー: Vr1フォルダ/signing.keystore（Key alias: tene-key）\n・詳細: https://github.com/keronimo119-ui/tene/tree/main/docs",
+    "savedAt": "2026/6/5 12:34:09"
+  },
+  {
     "project": "BISUKE",
     "status": "origin/main=05d3377（ローカル/GitHub/実機XQ-CC44すべて一致・未コミットなし）。本セッションで実装・実機検証・push済み:\n①指摘5件(4fd4bab): 日記をテーマ/文字サイズに連動／タイムスタンプをカーソル位置に挿入／ウィジェットのツリー系統線をネイティブ描画／ウィジェット設定プレビューの角丸を実機同様に固定／バックアップに日記含む旨明記。\n②localStorageハードニング(554b92d): safeSetItemで容量超過を検知し警告(黙って失敗を解消)、設定に使用量インジケータ(70%黄/90%赤)。\n③AdMobバナー(377d5de): @capacitor-community/admob@8.0.0導入。起動時に初期化→UMP同意→トップにアダプティブバナー。現在Google公式テストID。実機でテスト広告表示確認済み。\n④公開準備(9a5d23e): リリース署名をbuild.gradleに配線(android/keystore.properties方式)。docs/に privacy-policy.html / RELEASE.md / data-safety.md / store-listing.md。\n⑤アイコン刷新(31cb905): 夜空に茶色うさぎ(短い耳)＋金の土星の輪。scripts/gen-icons.mjs(sharp)で全解像度PNG生成。ストア用 docs/play-icon-512.png・docs/feature-graphic-1024x500.png も生成。\n⑥ストア文面(6e5c6de,05d3377): 多機能電卓を主役に全分野メニューを列挙。計算は約230種類(列挙の55は代表メニュー)。\n実機 全画面 目視チェック済(表示崩れ・不具合なし)。",
     "next": "- 多機能電卓の計算「種類数」を正確に確定（CategoryTreeのメニューは55項目、総計算は約230。store-listing.md/フィーチャー画像の数値整合を最終確認。化学の反応式DB等を実カウント）。\n- AdMob本番化: アカウントでアプリID/バナー広告ユニットID発行→ AndroidManifest.xml の APPLICATION_ID と www/index.html 末尾の TEST_BANNER_ANDROID を本番IDへ、isTesting と initializeForTesting を false に（docs/RELEASE.md 手順3）→ npx cap sync android。\n- リリース署名: キーストア作成＋ android/keystore.properties 作成（docs/RELEASE.md 手順1-2。鍵は厳重保管・紛失厳禁）。\n- プライバシーポリシーを公開(GitHub Pages等)しURL取得（docs/privacy-policy.html）。\n- Play Console申請: bundleReleaseでAAB→アップロード、データ安全性(docs/data-safety.md)、広告=あり、レーティング、掲載情報(docs/store-listing.md/play-icon-512.png/feature-graphic-1024x500.png)。\n- (任意) ストア用スクショは本番広告化後に撮り直し（現状の _device_*.png はテスト広告入りの参考版）。",
