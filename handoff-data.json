@@ -75,6 +75,7 @@
     "status": "Google Play クローズドテスト審査に送信完了（2026/5/27）。\n審査通過メール待ち中。",
     "next": "① 審査通過メールが届いたら、テスター12人にオプトインリンクを送る\n② 14日間のテスト期間を待つ\n③ 本番リリース（製品版）申請\n④ AdMob設定（並行して進められる）",
     "memo": "・GitHub Pages: https://keronimo119-ui.github.io/tene/tene.html\n・リポジトリ: https://github.com/keronimo119-ui/tene\n・パッケージID: io.github.keronimo119ui.tene\n・署名キー: Vr1フォルダ/signing.keystore（Key alias: tene-key）\n・AABバージョンコードは毎回+1（現在2）\n・PWABuilder使用時は必ず「Use mine」でsigning.keystoreを指定\n・詳細: https://github.com/keronimo119-ui/tene/tree/main/docs",
-    "savedAt": "2026/6/1 10:08:07"
+    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/tene/main/docs/summary.md",
+    "savedAt": "2026/6/1 10:08:07（更新：2026/6/5 12:36:43）"
   }
 ]
