@@ -1,5 +1,13 @@
 [
   {
+    "project": "BISUKE",
+    "status": "AdMob本番ID差し替え済み（アプリID: ca-app-pub-5082973443766226~5946721582 / バナーユニットID: ca-app-pub-5082973443766226/5020652727）。バージョン2(1.1)でAABビルド・署名・Play Consoleクローズドテストに送信済み。バージョン1(1.0)のストア情報も審査中。キーストア: C:\\Users\\s-sigpc\\bisuke-release.jks（エイリアス: bisuke）。AndroidSdk: C:\\AndroidSdk。",
+    "next": "Googleの審査通過を待つ。承認後、Play ConsoleのクローズドテストタブからオプトインURLを取得してTeneテスター12人に共有。14日間テスト実施後、製品版申請。AdMobお支払い設定（銀行/税務/住所PIN）も必要。",
+    "memo": "JAVA_HOME=C:\\Program Files\\Android\\Android Studio\\jbr（JDK21必須）。ビルドコマンド: cd android && gradlew.bat bundleRelease --no-daemon。署名: jarsigner -keystore C:\\Users\\s-sigpc\\bisuke-release.jks -storepass [PW] app-release.aab bisuke。次回ビルド時はversionCodeを3以上に上げること。",
+    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/tene/main/docs/summary.md",
+    "savedAt": "2026/6/1 10:08:07（更新：2026/6/5 12:36:43）（更新：2026/6/6 15:33:09）"
+  },
+  {
     "project": "手値（Tene）",
     "status": "・テスター10人オプトイン済み（残り2人）\n・AdSenseアカウント作成・審査リクエスト送信済み（パブリッシャーID: ca-pub-5082973443766226）\n・keronimo119-ui.github.io トップページ作成\n・AdSenseコードをindex.html・tene.htmlに追加\n・ads.txt追加\n・引き継ぎツールをAIバナー・JSONインポート・docs自動取得対応に改善",
     "next": "① テスター残り2人オプトイン → 12人達成で14日カウント開始\n② AdSense審査通過メール待ち → 広告ユニット作成 → #ad-bannerにコード追加\n③ 14日後 → 本番リリース申請（広告宣言を「あり」に変更）",
@@ -57,13 +65,5 @@
     "next": "Androidホーム画面ウィジェットのネイティブ実装に着手。①AppWidgetProvider＋ウィジェット設定画面（色/透明度/文字サイズ/行間/罫線=モックの調整項目）②本体が書き出した共有データ(SharedPreferences/Capacitor Preferences)を読む配線 ③モック仕様どおりCanvasでビットマップ画像描画（フォント同梱・透明度は背景のみ・文字は常に不透明）④タップで本体アプリ起動（=広告露出が戦略の核）。実装前にまず計画を提示し合意を取ること。",
     "memo": "【重要】このアプリのリポジトリは github.com/keronimo119-ui/bisuke 。ツールが自動付与するtene/docsリンクはTene(第1弾)用なので無視すること。別PCでの再開: git clone後にnpm install（node_modules未追跡）。作業フォルダ: Desktop\\AI\\Claude file\\付箋タスクメモ天気付き多機能計算便利手帳\\。作業ルール: 見た目・機能は相談なしに変更しない/全体上書き(Write)禁止・部分Editのみ/編集前に都度バックアップ。space.htmlはユーザー正規Drive版BH(p5内蔵)。",
     "savedAt": "2026/6/2 16:08:33"
-  },
-  {
-    "project": "手値（Tene）",
-    "status": "Google Play クローズドテスト審査に送信完了（2026/5/27）。\n審査通過メール待ち中。",
-    "next": "① 審査通過メールが届いたら、テスター12人にオプトインリンクを送る\n② 14日間のテスト期間を待つ\n③ 本番リリース（製品版）申請\n④ AdMob設定（並行して進められる）",
-    "memo": "・GitHub Pages: https://keronimo119-ui.github.io/tene/tene.html\n・リポジトリ: https://github.com/keronimo119-ui/tene\n・パッケージID: io.github.keronimo119ui.tene\n・署名キー: Vr1フォルダ/signing.keystore（Key alias: tene-key）\n・AABバージョンコードは毎回+1（現在2）\n・PWABuilder使用時は必ず「Use mine」でsigning.keystoreを指定\n・詳細: https://github.com/keronimo119-ui/tene/tree/main/docs",
-    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/tene/main/docs/summary.md",
-    "savedAt": "2026/6/1 10:08:07（更新：2026/6/5 12:36:43）"
   }
 ]
