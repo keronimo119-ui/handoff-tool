@@ -1,5 +1,13 @@
 [
   {
+    "project": "趣味帳(Shumicho)",
+    "status": "v1.0.0完成・実機確認済み。図鑑/軌跡(デコ)/番付/俳句/連動カレンダー+手帳プレビュー実装済み。署名済みAAB作成実績あり(大型更新後なので要再ビルド)。AdMobは全てテストID。Play Console未登録。",
+    "next": "①ユーザー実機確認の反映 ②AdMobで趣味帳の本番ID発行→差し替え(docs/RELEASE.md手順1) ③versionCode2でbundleRelease ④Play Consoleにアプリ作成→クローズドテスト ⑤次回大物=カレンダーウィジェット(背景画像セット可・図鑑/番付/俳句との連動を なし/3つとも/選択式 で選べる仕様、詰めてから実装)",
+    "memo": "UI内で「推し」は使わない(宣伝文のみOK)。広告はモーダル中自動非表示→閉じて復帰。署名鍵C:\\Users\\s-mini2\\shumicho-release.jks(alias=shumicho、PWはandroid/keystore.propertiesに記載・リポジトリ外)。ビルド: JAVA_HOME=Android Studio jbr→npx cap sync android→gradlew.bat bundleRelease",
+    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/shumicho/main/docs/summary.md",
+    "savedAt": "2026/6/11 15:21:52"
+  },
+  {
     "project": "手値 - Tene",
     "status": "versionCode 4 (1.0.3) クローズドテスト審査送信完了。広告IDの申告も完了済み。審査通過待ち。",
     "next": "審査通過メールが届いたら、製品版→新しいリリースを作成→同じAABをアップロードして製品版公開申請。その後AdMob支払い設定（admob.google.com）。",
