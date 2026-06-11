@@ -1,11 +1,11 @@
 [
   {
     "project": "手値 - Tene",
-    "status": "Capacitor移行完了・署名済みAABビルド成功。Play ConsoleへのAABアップロード時に署名不一致エラー。Play Console左メニュー設定→アプリの署名で登録済み署名を確認する必要あり。versionCode 3は使用済み。\nGitHub capacitorブランチにpush済み（keronimo119-ui/tene）。ただしtene-signing.keystoreが含まれているため次回冒頭でgit rm --cached android/app/tene-signing.keystoreして削除する必要あり。",
-    "next": "1. Play Console設定→アプリの署名を確認。2. build.gradleのversionCodeを4に変更。3. Android StudioでGenerate Signed Bundle→release→Create。4. 生成されたAABをPlay Consoleにアップロード。",
-    "memo": "プロジェクト: C:\\Users\\s-mini2\\tene-capacitor / 署名鍵: android\\app\\tene-signing.keystore / alias: tene-key / pass: ygmwYbETjToS / AdMobアプリID: ca-app-pub-5082973443766226~5435218138 / バナー広告ユニットID: ca-app-pub-5082973443766226/6366032133 / パッケージ名: io.github.keronimo119ui.tene",
-    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/tene/main/docs/summary.md",
-    "savedAt": "2026/6/5 13:04:10（更新：2026/6/10 16:20:48）（更新：2026/6/10 16:33:32）"
+    "status": "versionCode 4 (1.0.3) クローズドテスト審査送信完了。広告IDの申告も完了済み。審査通過待ち。",
+    "next": "審査通過メールが届いたら、製品版→新しいリリースを作成→同じAABをアップロードして製品版公開申請。その後AdMob支払い設定（admob.google.com）。",
+    "memo": "署名鍵: android/app/tene-signing.keystore / alias: tene-key / pass: ygmwYbETjToS / AdMobアプリID: ca-app-pub-5082973443766226~5435218138 / バナー広告ユニットID: ca-app-pub-5082973443766226/6366032133 / パッケージ名: io.github.keronimo119ui.tene",
+    "docsUrl": "https://github.com/keronimo119-ui/tene/blob/capacitor/docs/summary.md",
+    "savedAt": "2026/6/5 13:04:10（更新：2026/6/10 16:20:48）（更新：2026/6/10 16:33:32）（更新：2026/6/11 10:15:01）"
   },
   {
     "project": "BISUKE",
