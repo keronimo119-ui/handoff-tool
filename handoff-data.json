@@ -1,11 +1,11 @@
 [
   {
-    "project": "趣味帳(Shumicho)",
-    "status": "v1.0.0完成・実機確認済み。図鑑/軌跡(デコ)/番付/俳句/連動カレンダー+手帳プレビュー実装済み。署名済みAAB作成実績あり(大型更新後なので要再ビルド)。AdMobは全てテストID。Play Console未登録。",
-    "next": "①ユーザー実機確認の反映 ②AdMobで趣味帳の本番ID発行→差し替え(docs/RELEASE.md手順1) ③versionCode2でbundleRelease ④Play Consoleにアプリ作成→クローズドテスト ⑤次回大物=カレンダーウィジェット(背景画像セット可・図鑑/番付/俳句との連動を なし/3つとも/選択式 で選べる仕様、詰めてから実装)",
-    "memo": "UI内で「推し」は使わない(宣伝文のみOK)。広告はモーダル中自動非表示→閉じて復帰。署名鍵C:\\Users\\s-mini2\\shumicho-release.jks(alias=shumicho、PWはandroid/keystore.propertiesに記載・リポジトリ外)。ビルド: JAVA_HOME=Android Studio jbr→npx cap sync android→gradlew.bat bundleRelease",
+    "project": "趣味帳Fav(Shumicho)",
+    "status": "v1.0.0以降に大量の機能追加を完了し、全て実機(XQ-CC44)検証・GitHub mainにpush済(最新コミット acbfeb2)。追加分=観覧モード+餅/剣/波紋ギミック(餅=画像を局所変形して触れるぷにぷにが看板機能)、連続記録バッジ、イベント登録(カレンダー連動)、今日の季語の毎朝通知(宗教語は除外)、作品の画像シェア(ネイティブ共有)、おまかせスライドショー、写真込み丸ごとバックアップ、ぷにぷに開封/コンプ祝福、画像は2本指ピンチでズーム。アプリ名は趣味帳Fav、ホーム=カレンダー。やりかけ作業なし。",
+    "next": "①明日は別PCで再開:git pull→npm install→npx cap sync android→android/local.properties作成(そのPCのSDKパス)→デバッグ起動確認 ②AdMobで本番ID発行→差し替え(docs/RELEASE.md手順1) ③versionCode2で再bundleRelease ④Play Console作成→クローズドテスト。AABは未再ビルドなので提出前に必ず再ビルドする。",
+    "memo": "新規プラグイン追加済(@capacitor/local-notifications・share・filesystem@8)→別PCではnpm install+npx cap sync android必須。AdMobは全てテストID(本番化未着手)。署名鍵=C:/Users/s-mini2/shumicho-release.jks(alias=shumicho、PWはandroid/keystore.properties・リポ外)。ビルドはJAVA_HOME=Android Studio jbr→gradlew.bat。UI内で『推し』は不使用。ワイヤレスadbはポートが変わるので毎回再ペア要。詳細は必ずdocsUrl(summary.md)を読む。",
     "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/shumicho/main/docs/summary.md",
-    "savedAt": "2026/6/11 15:21:52"
+    "savedAt": "2026/6/11 15:21:52（更新：2026/6/14 22:32:01）"
   },
   {
     "project": "手値 - Tene",
