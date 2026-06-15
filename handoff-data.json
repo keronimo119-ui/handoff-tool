@@ -1,11 +1,11 @@
 [
   {
     "project": "趣味帳Fav(Shumicho)",
-    "status": "v1.0.0以降に大量の機能追加を完了し、全て実機(XQ-CC44)検証・GitHub mainにpush済(最新コミット acbfeb2)。追加分=観覧モード+餅/剣/波紋ギミック(餅=画像を局所変形して触れるぷにぷにが看板機能)、連続記録バッジ、イベント登録(カレンダー連動)、今日の季語の毎朝通知(宗教語は除外)、作品の画像シェア(ネイティブ共有)、おまかせスライドショー、写真込み丸ごとバックアップ、ぷにぷに開封/コンプ祝福、画像は2本指ピンチでズーム。アプリ名は趣味帳Fav、ホーム=カレンダー。やりかけ作業なし。",
-    "next": "①明日は別PCで再開:git pull→npm install→npx cap sync android→android/local.properties作成(そのPCのSDKパス)→デバッグ起動確認 ②AdMobで本番ID発行→差し替え(docs/RELEASE.md手順1) ③versionCode2で再bundleRelease ④Play Console作成→クローズドテスト。AABは未再ビルドなので提出前に必ず再ビルドする。",
-    "memo": "新規プラグイン追加済(@capacitor/local-notifications・share・filesystem@8)→別PCではnpm install+npx cap sync android必須。AdMobは全てテストID(本番化未着手)。署名鍵=C:/Users/s-mini2/shumicho-release.jks(alias=shumicho、PWはandroid/keystore.properties・リポ外)。ビルドはJAVA_HOME=Android Studio jbr→gradlew.bat。UI内で『推し』は不使用。ワイヤレスadbはポートが変わるので毎回再ペア要。詳細は必ずdocsUrl(summary.md)を読む。",
+    "status": "2026-06-15 クローズドテスト配信中。AdMob本番ID化(アプリID ca-app-pub-5082973443766226~5744981967 / バナー /8091985262)→versionCode2/1.0.1で署名済みAAB再ビルド→Play Console申告・掲載情報・スクショ全完了→Alpha(クローズドテスト/日本/テスター=手値のメーリングリスト)に13:38公開済み。GitHub keronimo119-ui/shumicho はPublic化、最新コミットc14bfd5。Pagesは趣味帳Fav統一+BISUKE追加済み。実機XQ-CC44にデモデータ残存(了承済み)。",
+    "next": "①テスターにオプトインURLを共有→実際にDL・動作確認→フィードバック反映 ②問題なければ製品版(一般公開)へ昇格(個人アカウントはクローズドテスト12名×14日要件を満たしてから) ③余力で機能追加=カレンダーウィジェット(背景画像セット可・図鑑/番付/俳句との連動を なし/3つとも/選択式・Javaネイティブ)、手帳プレビューの画像書き出し等",
+    "memo": "⚠️本番ID版APK/AABは実機で動かさない(無効トラフィック=ポリシー違反)。⚠️アプリ一覧のアップデート状況列はキャッシュ表示あり→真の状態はテスト→クローズドテストのトラック画面で確認。署名鍵=C:/Users/s-mini2/shumicho-release.jks(alias=shumicho、PWはandroid/keystore.properties・リポ外・gitignore)。別PC手順=git clone(Public化で認証不要)→npm install→npx cap sync android→android/local.properties作成(そのPCのSDKパス)→JAVA_HOME=Android Studio jbr→gradlew.bat。リリースビルドのみ署名鍵持参要。スクショ再生成はtools/cdp.mjs(adb forward webview_devtools_remote_<pid>→node tools/cdp.mjs)。詳細は必ずdocsUrl(summary.md)を読む。",
     "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/shumicho/main/docs/summary.md",
-    "savedAt": "2026/6/11 15:21:52（更新：2026/6/14 22:32:01）"
+    "savedAt": "2026/6/11 15:21:52（更新：2026/6/14 22:32:01）（更新：2026/6/15 13:57:25）"
   },
   {
     "project": "手値 - Tene",
