@@ -1,5 +1,13 @@
 [
   {
+    "project": "mOchi-prOject(餅)",
+    "status": "2026-06-15。Phase1=餅エンジン単体MVP完成・実機(XQ-CC44)で画像読込→ぷにぷに変形を確認済み。Android雛形/もちアイコン/署名配線/AdMob(テストID)/docs済み。GitHub keronimo119-ui/mochi-project はPublic・最新commit 4cff800。ただし方針修正により、これから土台を作り直す段階。Play未登録。",
+    "next": "最優先=単発MVPを『コレクション+観覧モードの器』に載せ替える。趣味帳Favから galleryOpen/Show/Move・mochify(餅)・mochiZoneToggle(範囲指定)・2本指ズーム・スライドショー・shareCanvas を移植。IndexedDB=albums/works(複数題材画像Blob・餅ゾーン[自由形状+範囲ごとパラメータ]・レイヤー[順序/拡縮/角度]・調整・サムネ)。保存は再編集+書き出しの両対応。その後フェーズ=合成#3→スポイト/色補正#7→3D角度#2→色なじませ#4→部分角度#6→表情手動リグ#5→ループ揺れウィジェット→ライブ壁紙(振ると揺れる背景)。最後にPlay出品(趣味帳Fav流儀)。",
+    "memo": "正体=拡張前提の高性能画像コラージュ+2Dに動きでリアル感(本人言:4D-3D)。基盤は趣味帳Fav図鑑の観覧モード(単発加工ツールではない)。複数アルバム/複数題材の合成/保存両対応。署名鍵=C:/Users/s-mini2/mochi-release.jks alias=mochi(PWはandroid/keystore.properties・リポ外・gitignore)。別PC=git clone(Public・認証不要)→npm install→npx cap sync android→android/local.properties作成(そのPCのSDKパス)→JAVA_HOME=Android Studio jbr→gradlew.bat。リリースビルドのみ鍵持参。ポリシー線引き:グレー機能(#7スポイト塗り等)は前面に出さない/透かし・著作表示の除去を訴求しない/ディープフェイク的用途は実装も訴求も不可・個人利用前提。物理シェイクは要実機体感。詳細は必ずdocsUrl(DESIGN.md §1.5/1.6)を読む。",
+    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/mochi-project/main/docs/DESIGN.md",
+    "savedAt": "2026/6/15 16:03:28"
+  },
+  {
     "project": "趣味帳Fav(Shumicho)",
     "status": "2026-06-15 クローズドテスト配信中。AdMob本番ID化(アプリID ca-app-pub-5082973443766226~5744981967 / バナー /8091985262)→versionCode2/1.0.1で署名済みAAB再ビルド→Play Console申告・掲載情報・スクショ全完了→Alpha(クローズドテスト/日本/テスター=手値のメーリングリスト)に13:38公開済み。GitHub keronimo119-ui/shumicho はPublic化、最新コミットc14bfd5。Pagesは趣味帳Fav統一+BISUKE追加済み。実機XQ-CC44にデモデータ残存(了承済み)。",
     "next": "①テスターにオプトインURLを共有→実際にDL・動作確認→フィードバック反映 ②問題なければ製品版(一般公開)へ昇格(個人アカウントはクローズドテスト12名×14日要件を満たしてから) ③余力で機能追加=カレンダーウィジェット(背景画像セット可・図鑑/番付/俳句との連動を なし/3つとも/選択式・Javaネイティブ)、手帳プレビューの画像書き出し等",
