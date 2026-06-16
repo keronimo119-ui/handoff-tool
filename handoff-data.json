@@ -1,5 +1,13 @@
 [
   {
+    "project": "BISUKE（付箋タスクメモ天気付き多機能計算便利手帳）",
+    "status": "AIモデル間・PC間の引継ぎシステムを構築。①bisuke\\CLAUDE.md（全モデル共通の作業ルール）②docs\\HANDOFF.md（引継ぎノート）③docs\\SETUP.md（環境・検証手順）を整備しpush。さらに『新人モード（小ステップ+各ステップ検証、速さより正確さ）』と『ルール追加システム』を導入。専用コマンド /saikai（再開）/owari（終了）/rule（ルール追加）を作成し、別PCでも使えるよう設置スクリプト scripts\\setup-commands.ps1 を同梱。",
+    "next": "docs内の未保存スクショ6枚（ss01〜ss06.png, screenshots/）をストア用に保存するか削除するかユーザーに確認。フォント軽量化（fonttools）は未実施。",
+    "memo": "【最重要ルール】同じ方法で2回失敗したら3回目はやらず報告。検証せず『直った』と言わない。1修正=1コミット。全文Read禁止（特にwww/index.html）。【コマンド】/saikai /owari /rule。新PCでは1回だけ scripts\\setup-commands.ps1 を実行して全フォルダでコマンド有効化。【ビルド】JAVA_HOME=Android Studio同梱JBR(JDK21)。実機操作はadb tapでなくCDP。",
+    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/bisuke/main/docs/HANDOFF.md",
+    "savedAt": "2026/6/16 18:20:24"
+  },
+  {
     "project": "mOchi-prOject(餅)",
     "status": "2026-06-16。餅ギミックを趣味帳Favの観覧モードから丸ごと忠実移植完了・実機(XQ-CC44)で確認OK(コミット0ae5dc9・push済・作業ツリークリーン)。並行セッション(別PC)が先に作った『器』=アルバム/作品グリッド/観覧モード/Editor/レイヤー合成#3 を維持しつつ、観覧モード(Viewer)の餅だけ本物に差し替え。AdMob全テストID・Play未登録。",
     "next": "①Editor画面の餅もまだ劣化版(GRID14/こねる等)なので忠実エンジン化し、レイヤー合成#3・保存(再編集persist)と統合する ②企画書フェーズ順に #2 3D角度→#7 スポイト/色補正→#4 色なじませ→#6 部分角度→#5 表情手動リグ→ループ揺れウィジェット→#Phase5 ライブ壁紙(振ると揺れる背景) ③最後にアイコン確定→AdMob本番ID化→Play出品(趣味帳Fav流儀)。物理シェイクは実機で要体感確認。",
