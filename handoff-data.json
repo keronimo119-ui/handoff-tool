@@ -54,12 +54,5 @@
     "memo": "署名鍵=C:/Users/s-mini2/bisuke-release.jks(リポジトリ外・別PCへ鍵ファイルとPWを必携・PWはユーザー保管済)、alias=bisuke、配線=android/keystore.properties(gitignore済)、SHA256=32:30:DF:10:CD:D4:A5:AE:F2:77:3B:BB:7A:1D:71:4A:76:A3:71:9E:AF:54:1B:9A:30:D9:A2:F5:AE:1B:45:89。ビルド環境: JAVA_HOME=C:/Program Files/Android/Android Studio/jbr(JDK21必須), ANDROID_HOME=%LOCALAPPDATA%/Android/Sdk。復元手順=git clone→npm install(admob/geolocation/sharpが入る)→npx cap sync android→android/gradlew.bat installDebug(実機)/bundleRelease(配布)。実機=Xperia XQ-CC44(シリアルHQ62CQ0DE6)/Android14、無線ADB=adb connect IP:ポートで一発(ペア不要)、署名不一致INSTALL_FAILED時は adb uninstall io.github.keronimo119ui.bisuke→install(端末データ消去)。CDP検証=ソケットはPID版 webview_devtools_remote_<pid>、/jsonのwebSocketUrlはポート無しなので:9222補完、url先頭=https://localhost/のページ選択、scripts/cdp_eval.py使用、screencapは MSYS_NO_PATHCONV=1 で/sdcard保護。AdMob現状=公式テストID(バナー …3940256099942544/6300978111, isTesting:true)・広告はWebViewに重ねる方式(縮めない)→--ad-hで上部余白・最小サイズはBANNER(50dp)。版上げ時 versionCode 毎回+1。編集ルール=部分Editのみ/編集前に.bak/作業後commit&push/全表示を日本語。",
     "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/bisuke/main/docs/RELEASE.md",
     "savedAt": "2026/6/4 21:34:56（更新：2026/6/5 15:59:03）（更新：2026/6/5 16:05:00）"
-  },
-  {
-    "project": "BISUKE",
-    "status": "天気の精度改善2件＋ウィジェット設定画面の不具合を多数修正しpush済み（main=d076e25、未コミットなし）。\n・天気: 週間予報の離島まとめ区分対応で離島の本土誤表示を修正(56f0896)／地名をNominatim撤去しJMA由来(アメダス観測所名)に(f9dddb4)。天気ページは精査済みで懸念なし。\n・ウィジェット設定: ①開くと先頭に空白1ページが出る不具合を修正(本体ラッパーmin-height:100dvhが残るのが原因/126b626) ②下のボタンで選択ハイライトが消える＆計算機fontSize破壊バグを修正(設定用ハンドラを#settings-screenにスコープ) ③チェックボックスのラベルが薄い問題を黒字化 ④プレビュー170→120px縮小 ⑤デフォルト文字サイズ最小化(d076e25)。実機(XQ-CC44)で空白消滅を確認済み。",
-    "next": "ウィジェット設定の残課題（実機で要確認）:\n(A)フォントのプレビュー: 丸ゴシック/明朝/ポップがプレビューに出ない(Webフォント未読込)。内蔵すると正確だが容量+9〜12MB／注意書きで済ます案もあり→方針未決。\n(B)透明度・文字サイズのスライダーを動かすとプレビューが無地になりリアルタイム反映されずタップで更新される(Android WebView再描画遅延と推測)。実機で再描画対策を検証、不可なら「タップで更新」+促し文。\n(任意)実機ウィジェット側の完了メモ文字の薄さ(50%)を通常色+取り消し線のみに変えるか要否確認。\n中長期: 残りの実機目視／AdMob本実装(要アカウント・ID・同意方針)／公開準備(署名・プライバシーポリシー・データ安全性)。",
-    "memo": "再開: git pull→npm install→npx cap sync android。ビルドはPowerShellで JAVA_HOME=Android Studioのjbr(JDK21)・ANDROID_HOME=%LOCALAPPDATA%\\Android\\Sdk・android\\gradlew.bat installDebug。\n実機=XQ-CC44。今日USB有線が不安定で、ワイヤレスデバッグで接続(adb pair IP:ペア用ポート コード → adb connect IP:接続用ポート。ポートは毎回変わる/メイン画面のIP:ポートが接続用)。別PCでは再ペアリング要。\n署名不一致でinstall失敗時は adb uninstall io.github.keronimo119ui.bisuke（端末localStorage消去）。今日一度実施済みで端末データは初期化済み。\n方針=正確な情報のみ・精度優先・急がない。編集は部分Editのみ・全体上書き禁止・編集前.bak。",
-    "savedAt": "2026/6/3 21:54:59"
   }
 ]
