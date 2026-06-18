@@ -61,12 +61,5 @@
     "next": "ウィジェット設定の残課題（実機で要確認）:\n(A)フォントのプレビュー: 丸ゴシック/明朝/ポップがプレビューに出ない(Webフォント未読込)。内蔵すると正確だが容量+9〜12MB／注意書きで済ます案もあり→方針未決。\n(B)透明度・文字サイズのスライダーを動かすとプレビューが無地になりリアルタイム反映されずタップで更新される(Android WebView再描画遅延と推測)。実機で再描画対策を検証、不可なら「タップで更新」+促し文。\n(任意)実機ウィジェット側の完了メモ文字の薄さ(50%)を通常色+取り消し線のみに変えるか要否確認。\n中長期: 残りの実機目視／AdMob本実装(要アカウント・ID・同意方針)／公開準備(署名・プライバシーポリシー・データ安全性)。",
     "memo": "再開: git pull→npm install→npx cap sync android。ビルドはPowerShellで JAVA_HOME=Android Studioのjbr(JDK21)・ANDROID_HOME=%LOCALAPPDATA%\\Android\\Sdk・android\\gradlew.bat installDebug。\n実機=XQ-CC44。今日USB有線が不安定で、ワイヤレスデバッグで接続(adb pair IP:ペア用ポート コード → adb connect IP:接続用ポート。ポートは毎回変わる/メイン画面のIP:ポートが接続用)。別PCでは再ペアリング要。\n署名不一致でinstall失敗時は adb uninstall io.github.keronimo119ui.bisuke（端末localStorage消去）。今日一度実施済みで端末データは初期化済み。\n方針=正確な情報のみ・精度優先・急がない。編集は部分Editのみ・全体上書き禁止・編集前.bak。",
     "savedAt": "2026/6/3 21:54:59"
-  },
-  {
-    "project": "BISUKE（付箋メモ）",
-    "status": "天気を全面的に気象庁(JMA)化し関連機能を全更新、実機(XQ-CC44)で検証しGitHubへpush済み(main=1f7d7c2、未保存編集なし)。\n・予報/週間/降水確率/最高最低=forecast、概況=overview、現況(気温/風/降水/湿度)=アメダス実測、波=波浪予報、警報=warning。Open-Meteoは全撤去。\n・警報の重大バグ修正(従来は常に「警報なし」と誤表示)。地域精度を一次細分・離島まで全国対応(名護=本島北部/八丈島=伊豆諸島南部/対馬/隠岐などを実機検証)。\n・熱中症=WBGT目安、花粉=飛散時期表示、PM2.5/黄砂=偽値を撤去し「—」、日の出入り・月の出入りを天文計算で正確化、データの出どころ(予報地域/観測所)を画面に明示。\n・フォント軽量化(a96340f)も同梱でpush済み。",
-    "next": "※天気は中核完成。以下は任意・急がない。「情報は正確なものだけ実装、精度優先」を厳守。\n① ウィジェット設定UIの設定値が実際のウィジェット描画に効くか調査→未実装なら実装(要ウィジェット配置・実機目視)\n② AdMob本実装(アプリID/広告ユニットID/UMP同意の決定が必要)\n③ 天気の任意強化: 週間の離島まとめ区分(130100)対応、PM2.5/花粉の信頼できるAPI連携、熱中症の環境省実測WBGT。いずれも信頼できるデータが用意できる場合のみ着手",
-    "memo": "再開手順: git pull→npm install→npx cap sync android。ビルドはPowerShellで gradlew.bat installDebug(cmd経由だと未ビルドのことあり)。JAVA_HOME=Android Studioのjbr(JDK21)。\n実機=XQ-CC44。CDP検証時は画面オフでGPSがハングするので adb shell svc power stayon true ＋ KEYCODE_WAKEUP で画面を起こす。署名不一致でinstall失敗時は adb uninstall io.github.keronimo119ui.bisuke。\n詳細(JMAの落とし穴/警報コード/CDP手順)はClaudeのメモリ bisuke_weather_jma.md に記録済み。方針=正確な情報のみ・精度優先・急がない。",
-    "savedAt": "2026/6/3 16:11:29"
   }
 ]
