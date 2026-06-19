@@ -1,6 +1,14 @@
 [
   {
     "project": "mOchi-prOject(餅)",
+    "status": "",
+    "next": "#3b 範囲指定の色調整（投げ縄で囲った範囲だけ明暗/寒暖）,#2 切抜き+3D風奥行き回転（切抜きタブ）,#1 スポイト+塗りつぶし（塗りタブ・最難関→段階実装）,保管庫表現の改善（保存先の分かりやすさ）,餅以外の変形ギミック（●水鉄砲/●じわり/●ほんのり、斬撃/グシャグシャ/破く/銃弾ガラス/色反転/泥）,Play出品（アイコン確定・AdMob本番ID化・素材・プライバシーポリシー・署名AAB）",
+    "memo": "",
+    "docsUrl": "handoff-tool",
+    "savedAt": "2026/6/19 16:03:46"
+  },
+  {
+    "project": "mOchi-prOject(餅)",
     "status": "完了・push済み・実機未確認",
     "next": "①Editor画面の餅もまだ劣化版(GRID14/こねる等)なので忠実エンジン化し、レイヤー合成#3・保存(再編集persist)と統合する ②企画書フェーズ順に #2 3D角度→#7 スポイト/色補正→#4 色なじませ→#6 部分角度→#5 表情手動リグ→ループ揺れウィジェット→#Phase5 ライブ壁紙(振ると揺れる背景) ③最後にアイコン確定→AdMob本番ID化→Play出品(趣味帳Fav流儀)。物理シェイクは実機で要体感確認。",
     "memo": "正体=拡張前提の高性能画像コラージュ+2Dに動き(餅)+奥行き(3D角度)=本人言『餅=4D-3D+2D』。基盤は趣味帳Fav図鑑の観覧モード。複数アルバム/複数題材合成/保存両対応。⚠️複数PC・複数セッション同時進行中→着手前に必ずgit fetchしてリモート確認(divergence発生済)。⚠️別PCのdebug APKは署名(各PCの~/.android/debug.keystore)が違いinstall -rが弾かれ旧版が残る→症状=#gl-body等が無い→対処はadb uninstall io.github.keronimo119ui.mochiproject してからadb install(テストデータ消える)。署名鍵(リリース)=C:/Users/s-mini2/mochi-release.jks alias=mochi(PWはandroid/keystore.properties・リポ外)。別PC=git clone(Public)→npm install→npx cap sync android→android/local.properties作成→JAVA_HOME=Android Studio jbr→gradlew.bat。ポリシー線引き:グレー機能(#7スポイト等)は前面に出さない/透かし除去訴求しない/ディープフェイク不可・個人利用前提。詳細は必ずdocsUrl(DESIGN.md §1.5/1.6)。",
