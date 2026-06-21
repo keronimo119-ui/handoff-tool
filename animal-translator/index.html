@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#ff7a18">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="鳴き声翻訳機">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="icon" href="icon.svg">
+<title>動物の鳴き声翻訳機 - 超高品質</title>
+<style>
+:root{
+  --accent:#ff7a18; --accent2:#6a3dd6;
+  --bg:#0d0d1a; --card:#161629; --card2:#1f1f3a;
+  --text:#f1f1f8; --sub:#9a9ac0; --good:#4caf50; --warn:#ff5252;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;
+  overscroll-behavior:none;}
+body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);}
+.wrap{max-width:480px;margin:0 auto;padding:18px 16px 40px;min-height:100vh;}
+
+header{text-align:center;padding:10px 0 4px;}
+header h1{font-size:1.3rem;margin:0;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800;}
+header p{font-size:0.78rem;color:var(--sub);margin:6px 0 0;}
+
+.species-bar{display:flex;gap:8px;margin:18px 0 6px;}
+.sp-btn{flex:1;background:var(--card);border:2px solid transparent;border-radius:14px;
+  padding:12px 4px;text-align:center;cursor:pointer;transition:transform .15s, border-color .2s, background .2s;}
+.sp-btn:active{transform:scale(0.95);}
+.sp-btn .emoji{font-size:1.7rem;display:block;}
+.sp-btn .label{font-size:0.72rem;color:var(--sub);margin-top:4px;display:block;}
+.sp-btn.active{border-color:var(--accent);background:var(--card2);}
+.sp-btn.active .label{color:var(--text);}
+
+.stage{background:var(--card);border-radius:20px;padding:24px 16px;margin-top:14px;text-align:center;
+  border:1px solid #25254a;}
+.mic-zone{position:relative;width:180px;height:180px;margin:6px auto 14px;display:flex;align-items:center;justify-content:center;}
+canvas#ring{position:absolute;inset:0;width:180px;height:180px;}
+#micBtn{position:relative;width:108px;height:108px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:2.4rem;
+  cursor:pointer;box-shadow:0 6px 24px rgba(255,122,24,.35);transition:transform .15s;}
+#micBtn:active{transform:scale(0.93);}
+#micBtn.listening{animation:pulse 1.1s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,82,82,.55);}70%{box-shadow:0 0 0 22px rgba(255,82,82,0);}100%{box-shadow:0 0 0 0 rgba(255,82,82,0);}}
+
+#statusText{font-size:0.92rem;color:var(--sub);min-height:1.4em;margin-top:4px;}
+#hintText{font-size:0.78rem;color:#6f6f96;margin-top:2px;}
+
+.result{display:none;margin-top:18px;background:var(--card2);border-radius:16px;padding:18px;
+  border:1px solid #2c2c54;animation:fadein .35s ease;}
+.result.show{display:block;}
+@keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.result .mascot{font-size:2.6rem;}
+.result .phrase{font-size:1.25rem;font-weight:800;margin:8px 0 4px;line-height:1.4;}
+.result .label{display:inline-block;font-size:0.75rem;color:#fff;background:var(--accent);
+  padding:3px 10px;border-radius:20px;margin-bottom:8px;}
+.result .conf{font-size:0.78rem;color:var(--sub);margin-top:6px;}
+.confbar{height:6px;background:#0d0d1a;border-radius:4px;overflow:hidden;margin-top:4px;}
+.confbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+.tag{font-size:0.68rem;color:var(--sub);background:#0d0d1a;border:1px solid #2c2c54;border-radius:10px;padding:3px 8px;}
+.speak-btn{margin-top:14px;background:#0d0d1a;border:1px solid #2c2c54;color:var(--text);
+  padding:9px 18px;border-radius:10px;font-size:0.85rem;cursor:pointer;}
+.speak-btn:active{transform:scale(0.96);}
+
+.history-card{margin-top:18px;background:var(--card);border-radius:16px;padding:4px 16px 12px;border:1px solid #25254a;}
+.history-card summary{padding:12px 0;font-size:0.85rem;color:var(--sub);cursor:pointer;outline:none;}
+.h-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #25254a;font-size:0.8rem;}
+.h-item .he{font-size:1.2rem;}
+.h-item .ht{flex:1;}
+.h-item .ht b{display:block;font-size:0.85rem;}
+.h-item .ht span{color:var(--sub);font-size:0.68rem;}
+.h-empty{color:var(--sub);font-size:0.78rem;padding:8px 0;}
+
+.disclaimer{margin-top:16px;font-size:0.68rem;color:#666690;line-height:1.6;text-align:center;}
+.permerr{color:var(--warn);font-size:0.82rem;margin-top:8px;display:none;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>🐾 動物の鳴き声翻訳機</h1>
+  <p>超高品質サウンド解析エンジン搭載・スマホ対応</p>
+</header>
+
+<div class="species-bar" id="speciesBar">
+  <div class="sp-btn active" data-sp="dog"><span class="emoji">🐶</span><span class="label">イヌ</span></div>
+  <div class="sp-btn" data-sp="cat"><span class="emoji">🐱</span><span class="label">ネコ</span></div>
+  <div class="sp-btn" data-sp="bird"><span class="emoji">🐦</span><span class="label">トリ</span></div>
+  <div class="sp-btn" data-sp="auto"><span class="emoji">🪄</span><span class="label">おまかせ</span></div>
+</div>
+
+<div class="stage">
+  <div class="mic-zone">
+    <canvas id="ring" width="180" height="180"></canvas>
+    <button id="micBtn">🎙️</button>
+  </div>
+  <div id="statusText">タップして鳴き声を録音してね</div>
+  <div id="hintText">犬の鳴き声を聞かせてください</div>
+  <div class="permerr" id="permErr">⚠️ マイクへのアクセスが許可されていません。ブラウザの設定から許可してください。</div>
+</div>
+
+<div class="result" id="resultCard">
+  <div class="mascot" id="resMascot">🐶</div>
+  <div class="label" id="resLabel">興奮・喜び</div>
+  <div class="phrase" id="resPhrase">遊ぼう遊ぼう！</div>
+  <div class="conf">翻訳の確信度 <span id="resConfNum">82</span>%</div>
+  <div class="confbar"><i id="resConfBar" style="width:82%"></i></div>
+  <div class="tags" id="resTags"></div>
+  <button class="speak-btn" id="speakBtn">🔊 鳴き声の意味を読み上げる</button>
+</div>
+
+<details class="history-card">
+  <summary>📜 翻訳履歴を見る</summary>
+  <div id="historyList"><div class="h-empty">まだ履歴がありません</div></div>
+</details>
+
+<div class="disclaimer">
+  本アプリは音の高さ・長さ・繰り返しなどの音響特徴をヒューリスティックに解析して「翻訳」するエンターテインメントアプリです。科学的な動物言語の翻訳を保証するものではありません。
+</div>
+
+</div>
+
+<script>
+(function(){
+'use strict';
+
+const SPECIES_THEME = {
+  dog:  { name:'イヌ', mascot:'🐶', hint:'犬の鳴き声を聞かせてください', color:'#ff7a18' },
+  cat:  { name:'ネコ', mascot:'🐱', hint:'猫の鳴き声を聞かせてください', color:'#6a3dd6' },
+  bird: { name:'トリ', mascot:'🐦', hint:'鳥のさえずりを聞かせてください', color:'#1fbf8f' },
+  auto: { name:'おまかせ', mascot:'🪄', hint:'どの動物の声かAIがおまかせで判定します', color:'#3a8bff' }
+};
+
+let species = 'dog';
+const speciesBar = document.getElementById('speciesBar');
+const micBtn = document.getElementById('micBtn');
+const statusText = document.getElementById('statusText');
+const hintText = document.getElementById('hintText');
+const permErr = document.getElementById('permErr');
+const ringCanvas = document.getElementById('ring');
+const ringCtx = ringCanvas.getContext('2d');
+
+speciesBar.addEventListener('click', (e) => {
+  const btn = e.target.closest('.sp-btn');
+  if (!btn || recording) return;
+  species = btn.dataset.sp;
+  [...speciesBar.children].forEach((c) => c.classList.toggle('active', c === btn));
+  hintText.textContent = SPECIES_THEME[species].hint;
+  hideResult();
+});
+
+// ---------- Audio setup ----------
+let audioCtx = null;
+let analyser = null;
+let mediaStream = null;
+let recording = false;
+let rafId = null;
+
+// per-utterance capture buffers
+let pitchContour = [];   // {t, hz}
+let volumeContour = [];  // {t, rms}
+let zcrSamples = [];     // noisiness 0..1
+let silentMs = 0;
+let voiced = false;
+let recStartTs = 0;
+let lastAnalysisTs = 0;
+
+async function ensureAudio() {
+  if (audioCtx) return true;
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation:false, noiseSuppression:false, autoGainControl:false } });
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = audioCtx.createMediaStreamSource(mediaStream);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 1024;
+    src.connect(analyser);
+    permErr.style.display = 'none';
+    return true;
+  } catch (err) {
+    permErr.style.display = 'block';
+    return false;
+  }
+}
+
+micBtn.addEventListener('click', async () => {
+  if (recording) { stopRecording(); return; }
+  const ok = await ensureAudio();
+  if (!ok) return;
+  startRecording();
+});
+
+function startRecording() {
+  recording = true;
+  pitchContour = [];
+  volumeContour = [];
+  zcrSamples = [];
+  silentMs = 0;
+  voiced = false;
+  recStartTs = performance.now();
+  lastAnalysisTs = 0;
+  micBtn.classList.add('listening');
+  statusText.textContent = '聞いています…';
+  hideResult();
+  if (navigator.vibrate) navigator.vibrate(30);
+  loop();
+}
+
+function stopRecording() {
+  recording = false;
+  micBtn.classList.remove('listening');
+  cancelAnimationFrame(rafId);
+  drawIdleRing();
+  finishAndAnalyze();
+}
+
+function loop() {
+  if (!recording) return;
+  rafId = requestAnimationFrame(loop);
+  const now = performance.now();
+  const t = (now - recStartTs) / 1000;
+
+  const timeBuf = new Float32Array(analyser.fftSize);
+  analyser.getFloatTimeDomainData(timeBuf);
+  drawWave(timeBuf);
+
+  // throttle the heavier autocorrelation pass to ~25 times/sec
+  if (now - lastAnalysisTs < 40) return;
+  lastAnalysisTs = now;
+
+  const rms = computeRms(timeBuf);
+  const zcr = computeZcr(timeBuf);
+  volumeContour.push({ t, rms });
+
+  const NOISE_FLOOR = 0.012;
+  if (rms > NOISE_FLOOR) {
+    voiced = true;
+    silentMs = 0;
+    const { pitch } = autoCorrelate(timeBuf, audioCtx.sampleRate);
+    if (pitch > 40 && pitch < 9000) pitchContour.push({ t, hz: pitch });
+    zcrSamples.push(zcr);
+  } else if (voiced) {
+    silentMs += 40;
+  }
+
+  // auto-stop: had sound, then ~1s of silence; or hard cap at 8s
+  if ((voiced && silentMs > 1000) || t > 8) {
+    stopRecording();
+  }
+}
+
+function computeRms(buf) {
+  let sum = 0;
+  for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+  return Math.sqrt(sum / buf.length);
+}
+function computeZcr(buf) {
+  let crossings = 0;
+  for (let i = 1; i < buf.length; i++) {
+    if ((buf[i] >= 0) !== (buf[i - 1] >= 0)) crossings++;
+  }
+  return crossings / buf.length;
+}
+
+// Autocorrelation pitch detection (time-domain ACF with parabolic peak interpolation).
+function autoCorrelate(buf, sampleRate) {
+  const SIZE = buf.length;
+  const rms = computeRms(buf);
+  if (rms < 0.01) return { pitch: -1, rms };
+
+  let r1 = 0, r2 = SIZE - 1;
+  const thres = 0.2;
+  for (let i = 0; i < SIZE / 2; i++) { if (Math.abs(buf[i]) < thres) { r1 = i; break; } }
+  for (let i = 1; i < SIZE / 2; i++) { if (Math.abs(buf[SIZE - i]) < thres) { r2 = SIZE - i; break; } }
+  const trimmed = buf.slice(r1, r2);
+  const n = trimmed.length;
+  if (n < 8) return { pitch: -1, rms };
+
+  const c = new Float32Array(n);
+  for (let lag = 0; lag < n; lag++) {
+    let sum = 0;
+    for (let j = 0; j < n - lag; j++) sum += trimmed[j] * trimmed[j + lag];
+    c[lag] = sum;
+  }
+  let d = 0;
+  while (d + 1 < n && c[d] > c[d + 1]) d++;
+  let maxVal = -1, maxPos = -1;
+  for (let i = d; i < n; i++) { if (c[i] > maxVal) { maxVal = c[i]; maxPos = i; } }
+  if (maxPos <= 0) return { pitch: -1, rms };
+
+  const x1 = c[maxPos - 1] ?? c[maxPos];
+  const x2 = c[maxPos];
+  const x3 = c[maxPos + 1] ?? c[maxPos];
+  const a = (x1 + x3 - 2 * x2) / 2;
+  const b = (x3 - x1) / 2;
+  let t0 = maxPos;
+  if (a) t0 = maxPos - b / (2 * a);
+  if (t0 <= 0) return { pitch: -1, rms };
+  return { pitch: sampleRate / t0, rms };
+}
+
+// ---------- Visualization ----------
+function drawWave(timeBuf) {
+  const w = ringCanvas.width, h = ringCanvas.height, cx = w / 2, cy = h / 2;
+  ringCtx.clearRect(0, 0, w, h);
+  ringCtx.beginPath();
+  ringCtx.arc(cx, cy, 64, 0, Math.PI * 2);
+  ringCtx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ringCtx.lineWidth = 2;
+  ringCtx.stroke();
+
+  const step = Math.floor(timeBuf.length / 64);
+  ringCtx.beginPath();
+  for (let i = 0; i < 64; i++) {
+    const v = timeBuf[i * step] || 0;
+    const angle = (i / 64) * Math.PI * 2 - Math.PI / 2;
+    const r = 64 + v * 110;
+    const x = cx + Math.cos(angle) * r;
+    const y = cy + Math.sin(angle) * r;
+    if (i === 0) ringCtx.moveTo(x, y); else ringCtx.lineTo(x, y);
+  }
+  ringCtx.closePath();
+  ringCtx.strokeStyle = SPECIES_THEME[species].color;
+  ringCtx.lineWidth = 2.5;
+  ringCtx.stroke();
+}
+function drawIdleRing() {
+  const w = ringCanvas.width, h = ringCanvas.height, cx = w / 2, cy = h / 2;
+  ringCtx.clearRect(0, 0, w, h);
+  ringCtx.beginPath();
+  ringCtx.arc(cx, cy, 64, 0, Math.PI * 2);
+  ringCtx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ringCtx.lineWidth = 2;
+  ringCtx.stroke();
+}
+drawIdleRing();
+
+// ---------- Feature extraction ----------
+function extractFeatures() {
+  const voicedPitches = pitchContour.map((p) => p.hz);
+  const avgPitch = voicedPitches.length ? voicedPitches.reduce((a, b) => a + b, 0) / voicedPitches.length : 0;
+  const minP = voicedPitches.length ? Math.min(...voicedPitches) : 0;
+  const maxP = voicedPitches.length ? Math.max(...voicedPitches) : 0;
+  const pitchRange = maxP - minP;
+
+  let pitchTrend = 'flat';
+  if (pitchContour.length >= 3) {
+    const first = pitchContour.slice(0, Math.ceil(pitchContour.length / 3));
+    const last = pitchContour.slice(-Math.ceil(pitchContour.length / 3));
+    const avgFirst = first.reduce((a, b) => a + b.hz, 0) / first.length;
+    const avgLast = last.reduce((a, b) => a + b.hz, 0) / last.length;
+    const delta = avgLast - avgFirst;
+    if (delta > avgFirst * 0.15) pitchTrend = 'rising';
+    else if (delta < -avgFirst * 0.15) pitchTrend = 'falling';
+  }
+
+  const pitchVariance = pitchRange / (avgPitch || 1);
+  const avgZcr = zcrSamples.length ? zcrSamples.reduce((a, b) => a + b, 0) / zcrSamples.length : 0;
+  const voicedVols = volumeContour.filter((v) => v.rms > 0.012);
+  const avgVolume = voicedVols.length ? Math.min(1, (voicedVols.reduce((a, b) => a + b.rms, 0) / voicedVols.length) * 8) : 0;
+
+  const duration = voicedVols.length ? (voicedVols[voicedVols.length - 1].t - voicedVols[0].t) : 0;
+
+  // count separate bursts: contiguous voiced runs in the volume contour
+  let burstCount = 0, inBurst = false;
+  for (const v of volumeContour) {
+    if (v.rms > 0.012) { if (!inBurst) { burstCount++; inBurst = true; } }
+    else inBurst = false;
+  }
+
+  return { avgPitch, pitchRange, pitchTrend, pitchVariance, avgZcr, avgVolume, duration, burstCount };
+}
+
+// ---------- Classifiers ----------
+function classifyDog(f) {
+  if (f.avgZcr > 0.32 && f.avgPitch > 0 && f.avgPitch < 400 && f.duration > 0.9) {
+    return { label: '警戒・威嚇', phrase: 'うー…それ以上近づくと怖いよ！', tags: ['低音', 'ノイジー', '持続'], strength: 3 };
+  }
+  if (f.burstCount >= 3 && f.avgPitch > 450 && f.duration < 3.2) {
+    return { label: '興奮・喜び', phrase: '遊ぼう遊ぼう！楽しい！', tags: ['高音', '連続吠え'], strength: 3 };
+  }
+  if (f.avgPitch > 600 && f.duration > 0.9 && f.avgZcr < 0.22) {
+    return { label: '要求・甘え', phrase: 'お願い、もっと構って〜', tags: ['高音', 'なめらか', '長め'], strength: 2 };
+  }
+  if (f.pitchTrend === 'rising' && f.burstCount <= 2 && f.duration < 1.3) {
+    return { label: '注意喚起', phrase: 'ねえねえ、こっち見て！', tags: ['上昇調', '単発'], strength: 2 };
+  }
+  if (f.avgVolume > 0.6 && f.burstCount === 1 && f.duration < 0.7) {
+    return { label: '驚き', phrase: 'うわっ！何!?', tags: ['大音量', '短い'], strength: 1 };
+  }
+  return { label: 'ふつうの呼びかけ', phrase: 'ここにいるよ〜', tags: ['標準'], strength: 1 };
+}
+
+function classifyCat(f) {
+  if (f.avgPitch > 0 && f.avgPitch < 160 && f.avgZcr < 0.18 && f.duration > 1.6) {
+    return { label: '満足・リラックス', phrase: 'ゴロゴロ…とっても幸せ〜', tags: ['低音', 'なめらか', '長め'], strength: 3 };
+  }
+  if (f.avgZcr > 0.4 && f.duration < 1.6) {
+    return { label: '警戒・威嚇', phrase: 'シャー！それ以上来ないで！', tags: ['ノイジー', '短い'], strength: 3 };
+  }
+  if (f.pitchTrend === 'rising' && f.avgPitch > 280 && f.avgPitch < 950 && f.duration < 1.6) {
+    return { label: '要求', phrase: 'ごはんちょうだいニャ！', tags: ['上昇調', '中音'], strength: 2 };
+  }
+  if (f.burstCount >= 2 && f.duration < 1.1 && f.avgPitch > 380) {
+    return { label: '挨拶', phrase: 'ニャッ！ニャッ！（おかえり）', tags: ['短い連発'], strength: 2 };
+  }
+  if (f.avgPitch > 220 && f.duration > 1.4 && f.pitchTrend === 'falling') {
+    return { label: '不満・呼びかけ', phrase: 'もう…ちょっと構ってよ〜', tags: ['下降調', '長め'], strength: 1 };
+  }
+  return { label: '気分はナゾ', phrase: 'ニャー（気分はナゾ）', tags: ['標準'], strength: 1 };
+}
+
+function classifyBird(f) {
+  if (f.pitchVariance > 1.1 && f.duration > 1.4) {
+    return { label: 'さえずり・上機嫌', phrase: 'いい天気だね〜♪', tags: ['メロディアス', '長め'], strength: 3 };
+  }
+  if (f.burstCount >= 4 && f.duration < 2.2 && f.avgPitch > 2800) {
+    return { label: '警戒声', phrase: '危ない！みんな逃げて！', tags: ['高音連発'], strength: 3 };
+  }
+  if (f.avgPitch > 2200 && f.duration < 0.6 && f.burstCount <= 1) {
+    return { label: '呼びかけ', phrase: 'ここだよ、おーい！', tags: ['高音', '単発'], strength: 2 };
+  }
+  if (f.pitchTrend === 'falling' && f.duration > 1) {
+    return { label: '縄張り宣言', phrase: 'ここは僕の場所だよ！', tags: ['下降調'], strength: 1 };
+  }
+  return { label: 'おしゃべり中', phrase: 'チチチ（おしゃべり中）', tags: ['標準'], strength: 1 };
+}
+
+function guessSpecies(f) {
+  if (f.avgPitch > 1900) return 'bird';
+  if (f.avgPitch > 0 && f.avgPitch < 420 && f.avgZcr > 0.25) return 'dog';
+  if (f.avgPitch >= 220 && f.avgPitch <= 1900) return 'cat';
+  return 'dog';
+}
+
+function confidenceFor(f, result) {
+  const base = 55 + result.strength * 10 + Math.round(f.avgVolume * 10);
+  return Math.max(55, Math.min(92, base));
+}
+
+// ---------- Analysis pipeline ----------
+function finishAndAnalyze() {
+  const f = extractFeatures();
+  if (f.duration < 0.15 || f.avgVolume < 0.05) {
+    statusText.textContent = '聞こえなかったみたい。もう一度大きな声で鳴いてもらってね！';
+    return;
+  }
+
+  statusText.textContent = '解析中…';
+  setTimeout(() => {
+    let targetSpecies = species;
+    if (species === 'auto') targetSpecies = guessSpecies(f);
+
+    let result;
+    if (targetSpecies === 'dog') result = classifyDog(f);
+    else if (targetSpecies === 'cat') result = classifyCat(f);
+    else result = classifyBird(f);
+
+    const confidence = confidenceFor(f, result);
+    showResult(targetSpecies, result, confidence);
+    pushHistory(targetSpecies, result, confidence);
+    statusText.textContent = 'タップして鳴き声を録音してね';
+    if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+  }, 450);
+}
+
+// ---------- Result UI ----------
+const resultCard = document.getElementById('resultCard');
+const resMascot = document.getElementById('resMascot');
+const resLabel = document.getElementById('resLabel');
+const resPhrase = document.getElementById('resPhrase');
+const resConfNum = document.getElementById('resConfNum');
+const resConfBar = document.getElementById('resConfBar');
+const resTags = document.getElementById('resTags');
+const speakBtn = document.getElementById('speakBtn');
+
+let lastSpoken = '';
+
+function showResult(sp, result, confidence) {
+  resMascot.textContent = SPECIES_THEME[sp].mascot;
+  resLabel.textContent = result.label;
+  resPhrase.textContent = result.phrase;
+  resConfNum.textContent = confidence;
+  resConfBar.style.width = confidence + '%';
+  resTags.innerHTML = '';
+  result.tags.forEach((t) => {
+    const span = document.createElement('span');
+    span.className = 'tag';
+    span.textContent = t;
+    resTags.appendChild(span);
+  });
+  lastSpoken = result.phrase;
+  resultCard.classList.add('show');
+}
+function hideResult() {
+  resultCard.classList.remove('show');
+}
+
+speakBtn.addEventListener('click', () => {
+  if (!lastSpoken || !window.speechSynthesis) return;
+  const u = new SpeechSynthesisUtterance(lastSpoken);
+  u.lang = 'ja-JP';
+  const pitchMap = { dog: 0.85, cat: 1.3, bird: 1.6, auto: 1.0 };
+  const rateMap = { dog: 0.95, cat: 1.05, bird: 1.25, auto: 1.0 };
+  u.pitch = pitchMap[species] ?? 1;
+  u.rate = rateMap[species] ?? 1;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+});
+
+// ---------- History ----------
+const HISTORY_KEY = 'animalTranslatorHistory';
+function loadHistoryData() {
+  try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; } catch (e) { return []; }
+}
+function pushHistory(sp, result, confidence) {
+  const list = loadHistoryData();
+  list.unshift({
+    sp, mascot: SPECIES_THEME[sp].mascot, label: result.label, phrase: result.phrase,
+    confidence, at: new Date().toLocaleString('ja-JP')
+  });
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(list.slice(0, 30)));
+  renderHistory();
+}
+function renderHistory() {
+  const list = loadHistoryData();
+  const el = document.getElementById('historyList');
+  if (!list.length) { el.innerHTML = '<div class="h-empty">まだ履歴がありません</div>'; return; }
+  el.innerHTML = list.map((h) => `
+    <div class="h-item">
+      <span class="he">${h.mascot}</span>
+      <span class="ht"><b>${h.phrase}</b><span>${h.label}・確信度${h.confidence}%・${h.at}</span></span>
+    </div>`).join('');
+}
+renderHistory();
+
+// ---------- PWA service worker ----------
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+})();
+</script>
+</body>
+</html>
