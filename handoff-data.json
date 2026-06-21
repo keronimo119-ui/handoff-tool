@@ -35,7 +35,7 @@
     "project": "手値 - Tene",
     "status": "製品版へのアクセス申請を完了しGoogle審査中（2026/6/21 17:45申請・通常約7日で結果メール、6/28ごろ目安）。クローズドテスト要件(12人×14日)達成済み。広告(AdMob)はコード実装済み・本番ID設定済み(AndroidManifest+www/index.html)。",
     "next": "①審査結果メール待ち(6/28ごろ)→通過したら『製品版』で新リリース作成→同じAABをアップロードして製品版公開申請。②AdMob税務情報(W-8BEN)は提出・承認済み＝サービス源泉徴収率0%確定(2026-06-21,有効期限2029-12-31)。お支払いプロファイル(個人/日本)設定済み。銀行口座と住所PIN確認は収益発生後に対応。③この引継ぎリポは非公開化済み(公開時に署名鍵PWが露出していたため・鍵の作り直しは要検討)。",
-    "memo": "署名鍵: android/app/tene-signing.keystore / alias: tene-key / pass: ygmwYbETjToS / AdMobアプリID: ca-app-pub-5082973443766226~5435218138 / バナー広告ユニットID: ca-app-pub-5082973443766226/6366032133 / パッケージ名: io.github.keronimo119ui.tene",
+    "memo": "署名鍵: android/app/tene-signing.keystore / alias: tene-key / pass: （本人が別途安全に保管・公開ファイルには記載しない） / AdMobアプリID: ca-app-pub-5082973443766226~5435218138 / バナー広告ユニットID: ca-app-pub-5082973443766226/6366032133 / パッケージ名: io.github.keronimo119ui.tene",
     "docsUrl": "https://github.com/keronimo119-ui/tene/blob/capacitor/docs/summary.md",
     "savedAt": "2026/6/5 13:04:10（更新：2026/6/10 16:20:48）（更新：2026/6/10 16:33:32）（更新：2026/6/11 10:15:01）（更新：2026/6/21 17:50:00 製品版申請完了）（更新：2026/6/21 18:10 税務情報W-8BEN承認・repo非公開化）"
   },
