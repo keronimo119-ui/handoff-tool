@@ -1,5 +1,13 @@
 [
   {
+    "project": "手値（Tene）",
+    "status": "Google Playクローズドテスト2回目の14日間が進行中（リリース6 / 1.0.5、テスター12人オプトイン済み）。1回目の製品版申請はリジェクト済み。今回、広告バナーが画面下部に出てボタンを覆う不具合の原因を特定（AdSense自動広告のアンカー/オーバーレイ広告が下部に湧いている。ソース上のバナーは最上部にある）。最上部に明示ユニットを入れたtene.htmlと、CACHE_NAMEをtene-v2に上げたsw.jsの修正版を用意したが、テスト通過まで適用せず保留と判断。引継ぎ書docs/summary.mdを現状に合わせて更新（ファイルは作成済み、GitHubへのコミットは未実施）。",
+    "next": "テスター12人を14日間連続で維持し（毎日アプリを開いてもらう）、完走後に製品版申請。テスト期間中はアプリ/トラックに手を入れない。テスト通過後、Claude Codeに広告対応を依頼：(1)HTMLからAdSenseを撤去、(2)AdMobをTWAに正しく組み込む、(3)sw.jsのキャッシュ名を上げる。",
+    "memo": "構成はTWA。AAB内にHTMLは無く、起動時にGitHub Pages(https://keronimo119-ui.github.io/tene/tene.html)を読み込む。→画面修正はtene.htmlをpushするだけで反映、Play Consoleの新リリース不要＝14日カウンターに影響なし。ただしsw.jsはcache-firstなのでtene.html更新時は必ずCACHE_NAMEを上げる(例 tene-v1→tene-v2)、でないとテスター端末が古い画面のまま。クローズドテスト中のビルド差し替えではカウンターはリセットされない（リセットの引き金はテスター数が12人未満になること）。パッケージID:io.github.keronimo119ui.tene。署名キー:Vr1フォルダ/signing.keystore(alias:tene-key)。TWAアプリ内AdSenseはポリシー違反になりやすいため本対応はAdMobで。",
+    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/tene/main/docs/summary.md",
+    "savedAt": "2026/6/24 19:38:48"
+  },
+  {
     "project": "mOchi-prOject(餅)",
     "status": "",
     "next": "#3b 範囲指定の色調整（投げ縄で囲った範囲だけ明暗/寒暖）,#2 切抜き+3D風奥行き回転（切抜きタブ）,#1 スポイト+塗りつぶし（塗りタブ・最難関→段階実装）,保管庫表現の改善（保存先の分かりやすさ）,餅以外の変形ギミック（●水鉄砲/●じわり/●ほんのり、斬撃/グシャグシャ/破く/銃弾ガラス/色反転/泥）,Play出品（アイコン確定・AdMob本番ID化・素材・プライバシーポリシー・署名AAB）",
