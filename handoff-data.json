@@ -1,5 +1,13 @@
 [
   {
+    "project": "mOchi-prOject(餅)",
+    "status": "餅の範囲指定UIを足す/削る(strokesマスク)方式へ全面刷新し継ぎ目なし塗り表示に。最終操作=なぞる(未選択)で新範囲／長押しで範囲選択(水色・持続)／水色をドラッグで移動／足す・削るは範囲選択時のみ有効で選択中範囲を編集(トグルで移動に戻る)／タップ削除・空タップ選択解除／2本指ズーム(ロック中固定)。＋新範囲と移動ボタンは廃止。餅変形の境界カクカク(エイリアス)は密度UP等が副作用で却下→原状維持で決着。画像取り込みクロップに『全体』ボタン＋ピンチ縮小を追加(でかい画像が一部しか入らない問題を解消)。全てGitHub mainにpush済(最新 ff77db0)。範囲UIはユーザー確認OK、クロップは実画像確認待ち。",
+    "next": "実機で実画像の『全体』取り込みと縮小を最終確認。要望次第でクロップ余白色(黒→白)やドックの文字折返しを調整。以降のロードマップ(HANDOFF §4)=#1スポイト/塗りタブ、保管庫表現の改善、餅の他ギミック、Play出品(AdMob本番ID化/アイコン/ストア用スクショ/プライバシーポリシー/署名AAB)。",
+    "memo": "本体=www/index.html(単一HTML/JS・Capacitor8・canvas・admob)。ビルド=JAVA_HOMEをAndroid Studio同梱jbr→npx cap sync android→android/gradlew assembleDebug→adb install。実機検証=CDP(tools/cdp.mjs+adb forward webviewソケット)だが合成ジェスチャは効かず指操作はユーザー確認必須。範囲データ=works.mochiZonesに{strokes:[{poly,op}],str,rng}形式(旧lasso/circleはmkZoneで後方互換)。AdMobはテストID(本番未設定・出品前に差替)。署名鍵=C:/Users/s-mini2/mochi-release.jks(PWはandroid/keystore.properties・リポ外)。",
+    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/mochi-project/main/docs/HANDOFF.md",
+    "savedAt": "2026/6/25 16:32:00"
+  },
+  {
     "project": "手値（Tene）",
     "status": "Google Playクローズドテスト2回目の14日間が進行中（リリース6 / 1.0.5、テスター12人オプトイン済み）。1回目の製品版申請はリジェクト済み。今回、広告バナーが画面下部に出てボタンを覆う不具合の原因を特定（AdSense自動広告のアンカー/オーバーレイ広告が下部に湧いている。ソース上のバナーは最上部にある）。最上部に明示ユニットを入れたtene.htmlと、CACHE_NAMEをtene-v2に上げたsw.jsの修正版を用意したが、テスト通過まで適用せず保留と判断。引継ぎ書docs/summary.mdを現状に合わせて更新（ファイルは作成済み、GitHubへのコミットは未実施）。 / 【2026-06-24 追記】このPC(s-sigpc)には手値リポジトリ未clone（コード作業は別PC）。古い予約リマインダー tene-honban-shinsa-kakunin（旧:6/28・却下済み1回目審査チェック）を「2回目テスト完走確認＋製品版申請案内＋通過後の広告対応」に書き換え、発火日を7/9(木)9:00へ変更。7/9はテスト開始日不明のため6/24起点の推定（判明したら+14日に再調整）。",
     "next": "テスター12人を14日間連続で維持し（毎日アプリを開いてもらう）、完走後に製品版申請。テスト期間中はアプリ/トラックに手を入れない。テスト通過後、Claude Codeに広告対応を依頼：(1)HTMLからAdSenseを撤去、(2)AdMobをTWAに正しく組み込む、(3)sw.jsのキャッシュ名を上げる。",
