@@ -1,5 +1,13 @@
 [
   {
+    "project": "mOchi-prOject(餅)",
+    "status": "修正タブ(色補正)をこすり1本に統一し、スポイト色＋周囲色でなじませて消せるよう改善。重さ・切り出し時の色戻り・奥行き追従の不具合も修正済み。編集(修正/切抜き/色)と観覧(範囲指定)の両方に十字ポインター(マウス)を追加、指で隠れず細かい操作が可能に。全項目ユーザー実機確認OK、mainへpush済み(最新 bbd83ba)。",
+    "next": "餅の他ギミック(水鉄砲/じわり/ほんのり/斬撃/グシャグシャ丸め/破く/銃弾ガラス/色反転/泥など)に着手。詳細はdocs/HANDOFF.md §4-5参照。じわり/ほんのりは美容寄りグレーなのでストアで前面に出さない方針を維持。",
+    "memo": "本体=www/index.html(単一HTML/JS)。ビルド=JAVA_HOME(Android Studio jbr)→npx cap sync android→android/gradlew assembleDebug→adb install -r。実機検証=CDP(tools/cdp.mjs+adb forward)だが合成ジェスチャは効かず指操作は実機ユーザー確認必須。塗り機能はcreateMochiEngine非依存の編集側(Editor)にありlayers[].paintsで永続化。ワイヤレスadbのIP:ポートは毎回変わるので新セッション開始時に確認要。",
+    "docsUrl": "https://raw.githubusercontent.com/keronimo119-ui/mochi-project/main/docs/HANDOFF.md",
+    "savedAt": "2026/7/1 13:06:01"
+  },
+  {
     "project": "",
     "status": "",
     "next": "",
